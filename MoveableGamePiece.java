@@ -12,12 +12,13 @@ public interface MoveableGamePiece
 	/**
 	 * @param start The position of the starting square on the board.
 	 * @param end	The position of the ending square on the board.
+	 * @param moveIsACapture True if the move involves capturing another piece; false otherwise.
 	 * @precondition  start and end are two different valid squares on the board.
 	 * @precondition  No other pieces or special conditions are impeding the proposed move.
 	 * @return  True if the type of piece in question can legally move from start to end.
 	 * 		False otherwise. 
 	 */
-	public abstract boolean moveIsValid(Position start, Position end);
+	public abstract boolean moveIsValid(Position start, Position end, boolean moveIsACapture);
 	
 	public boolean getHasNeverMoved();
 	

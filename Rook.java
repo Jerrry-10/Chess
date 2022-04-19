@@ -3,6 +3,9 @@ package edu.cuny.csi.csc330.protochess;
 /**
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
+ * Class to represent a rook in chess.
+ * @implements MoveableGamePiece
+ * @extends ChessPiece
  */
 
 public final class Rook extends ChessPiece implements MoveableGamePiece {
@@ -13,11 +16,13 @@ public final class Rook extends ChessPiece implements MoveableGamePiece {
 	}
 
 	@Override
-	public boolean moveIsValid(Position start, Position end) 
+	/**
+	 * Rook can move vertically XOR horizontally on any turn.
+	 * 
+	 */
+	public boolean moveIsValid(Position start, Position end, boolean moveIsACapture) 
 	{
-		// TODO Auto-generated method stub
-		return false;
-		//Can move vertically XOR horizontally on any turn.
+		return ( ( (start.getRow() - end.getRow() ) == 0 ) ^ ( (start.getColumn() - end.getColumn() ) == 0) );
 	}
 
 	@Override

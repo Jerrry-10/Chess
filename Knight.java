@@ -3,6 +3,9 @@ package edu.cuny.csi.csc330.protochess;
 /**
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
+ * Class to represent a knight in chess. Knight can only move in a 2 x 1 'L'.
+ * @implements MoveableGamePiece
+ * @extends ChessPiece
  */
 
 public final class Knight extends ChessPiece implements MoveableGamePiece 
@@ -14,10 +17,20 @@ public final class Knight extends ChessPiece implements MoveableGamePiece
 	}
 
 	@Override
-	public boolean moveIsValid(Position start, Position end) {
-		// TODO Auto-generated method stub
-		return false;
-		//Knight can only move in a 2 x 1 'L'.
+	public boolean moveIsValid(Position start, Position end, boolean moveIsACapture) {
+		
+		if ( (Math.abs(start.getColumn() - end.getColumn() ) == 2) && (Math.abs(start.getRow() - end.getRow() ) == 1) )
+		{
+			return true;
+		}
+		else if ( (Math.abs(start.getRow() - end.getRow() ) == 2) && (Math.abs(start.getColumn() - end.getColumn() ) == 1) )
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	@Override
