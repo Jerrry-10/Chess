@@ -30,6 +30,7 @@ public final class Pawn extends ChessPiece implements MoveableGamePiece
 	 * @return True if the move takes the pawn one square forward. Also true if the move is the pawn's
 	 * FIRST move and takes the pawn two squares forward. False otherwise.
 	 */
+	//THIS METHOD DOES NOT WORK!
 	private boolean moveIsValid(Position start, Position end)
 	{
 		//Pawns cannot move horizontally.
@@ -51,7 +52,9 @@ public final class Pawn extends ChessPiece implements MoveableGamePiece
 				}
 				
 				//"Forward" means ascending for white but descending for black.
-				if( (color == Color.WHITE) && ( ( end.getRow() - start.getRow() ) <= distanceLimit) )
+				if( (color == Color.WHITE) && ( ( end.getRow() - start.getRow() ) <= distanceLimit) 
+						&& ( end.getRow() - start.getRow() > 0 ) )
+						
 				{
 					return true;
 				}

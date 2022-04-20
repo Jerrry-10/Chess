@@ -1,9 +1,9 @@
 package edu.cuny.csi.csc330.protochess;
 
 /**
+ * Class to represent a king in chess.
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
- * Class to represent a king in chess.
  * @implements MoveableGamePiece
  * @extends ChessPiece
  */
@@ -22,11 +22,12 @@ public final class King extends ChessPiece implements MoveableGamePiece
 	 * RESPONSIBILITY to determine whether the king is in check, is trying to move into check, or is able to
 	 * castle.
 	 */
+	//Tested
 	@Override
 	public boolean moveIsValid(Position start, Position end, boolean moveIsACapture) 
 	{
-		//
-		return ( (Math.abs( start.getRow() - end.getRow() ) < 2) && ( Math.abs(start.getColumn() - end.getColumn() ) < 2) );
+		return ( (Math.abs( start.getRow() - end.getRow() ) < 2) && 
+				( Math.abs(start.getColumn() - end.getColumn() ) < 2) );
 	}
 
 	@Override

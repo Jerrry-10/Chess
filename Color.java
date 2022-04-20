@@ -1,6 +1,6 @@
 package edu.cuny.csi.csc330.protochess;
 
-/**
+/**Enumeration type to represent colors.
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
  */
