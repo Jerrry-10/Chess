@@ -1,8 +1,10 @@
 package edu.cuny.csi.csc330.protochess;
 
 /**
+ * Base class to provide data and functionality shared by all six types of chesspieces.
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
+ * @implements MoveableGamePiece
  */
 
 public abstract class ChessPiece implements MoveableGamePiece
@@ -22,7 +24,11 @@ public abstract class ChessPiece implements MoveableGamePiece
 		hasNeverMoved = true;
 	}
 	
-	public abstract boolean moveIsValid(Position start, Position end);
+	/**
+	 * @precondition The chesspiece is NOT attempting to castle, capture en passant, or violate
+	 * the rules of "check."
+	 */
+	public abstract boolean moveIsValid(Position start, Position end, boolean moveIsACapture);
 	
 	public Color getColor()
 	{

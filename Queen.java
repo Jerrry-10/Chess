@@ -3,6 +3,9 @@ package edu.cuny.csi.csc330.protochess;
 /**
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
+ * Class to represent a queen in chess.
+ * @implements MoveableGamePiece
+ * @extends ChessPiece
  */
 
 public final class Queen extends ChessPiece implements MoveableGamePiece {
@@ -18,10 +21,12 @@ public final class Queen extends ChessPiece implements MoveableGamePiece {
 	}
 
 	@Override
-	public boolean moveIsValid(Position start, Position end) 
+	/**
+	 * On any given turn, a queen can move like a bishop XOR move like a rook.
+	 */
+	public boolean moveIsValid(Position start, Position end, boolean moveIsACapture) 
 	{
-		//On any given turn, a queen can move like a bishop XOR move like a rook.
-		return (bishopPowers.moveIsValid(start, end) ^ rookPowers.moveIsValid(start, end) );
+		return (bishopPowers.moveIsValid(start, end, false) ^ rookPowers.moveIsValid(start, end, false) );
 		
 	}
 		

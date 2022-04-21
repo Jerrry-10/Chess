@@ -3,6 +3,9 @@ package edu.cuny.csi.csc330.protochess;
 /**
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
+ * Class to represent a bishop in chess. A bishop can only move diagonally.
+ * @implements MoveableGamePiece
+ * @extends ChessPiece
  */
 
 public final class Bishop extends ChessPiece implements MoveableGamePiece 
@@ -14,9 +17,9 @@ public final class Bishop extends ChessPiece implements MoveableGamePiece
 	}
 
 	@Override
-	public boolean moveIsValid(Position start, Position end) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean moveIsValid(Position start, Position end, boolean moveIsACapture) 
+	{
+		return ( Math.abs(start.getRow() - end.getRow() ) == Math.abs(start.getColumn() - end.getColumn() ) );
 	}
 
 	@Override
