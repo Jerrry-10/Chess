@@ -1,13 +1,11 @@
 package edu.cuny.csi.csc330.protochess;
 
 /**
+ * Class to represent a pawn in chess.
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
  * @implements MoveableGamePiece
  * @extends ChessPiece
- * Class to represent a pawn in chess. A pawn normally moves one square forward, but
- * has the option to move two squares forward on its first move. A pawn moves one
- * square diagonally forwards when capturing.
  */
 
 public final class Pawn extends ChessPiece implements MoveableGamePiece 
@@ -18,8 +16,12 @@ public final class Pawn extends ChessPiece implements MoveableGamePiece
 		super(color);
 	}
 
+	/**
+	 * A pawn normally moves one square forward, but has the option to move two squares
+	 * forward on its first move ONLY. A pawn moves one square diagonally forwards instead when
+	 * capturing. Note that "Forward" means ascending for white but descending for black.
+	 */
 	@Override
-	 //A pawn moves differently from normal when capturing.
 	public boolean moveIsValid(Position start, Position end, boolean moveIsACapture) 
 	{
 		return moveIsACapture ? captureIsValid(start, end) : moveIsValid(start, end);
@@ -30,16 +32,10 @@ public final class Pawn extends ChessPiece implements MoveableGamePiece
 	 * @return True if the move takes the pawn one square forward. Also true if the move is the pawn's
 	 * FIRST move and takes the pawn two squares forward. False otherwise.
 	 */
-	//THIS METHOD DOES NOT WORK!
 	private boolean moveIsValid(Position start, Position end)
 	{
 		//Pawns cannot move horizontally.
 				if( (start.getColumn() != end.getColumn() ) )
-				{
-					return false;
-				}
-				
-				if ( (start.getRow() - end.getRow() ) < 1)
 				{
 					return false;
 				}
@@ -51,14 +47,14 @@ public final class Pawn extends ChessPiece implements MoveableGamePiece
 					distanceLimit = 2;
 				}
 				
-				//"Forward" means ascending for white but descending for black.
 				if( (color == Color.WHITE) && ( ( end.getRow() - start.getRow() ) <= distanceLimit) 
 						&& ( end.getRow() - start.getRow() > 0 ) )
 						
 				{
 					return true;
 				}
-				else if( (color == Color.BLACK) && ( ( start.getRow() - end.getRow() ) <= distanceLimit) )
+				else if( (color == Color.BLACK) && ( ( start.getRow() - end.getRow() ) <= distanceLimit) 
+						&& ( start.getRow() - end.getRow() > 0 ) )
 				{
 					return true;
 				}
