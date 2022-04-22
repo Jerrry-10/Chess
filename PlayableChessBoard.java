@@ -7,7 +7,6 @@ package edu.cuny.csi.csc330.protochess;
  */
 
 import java.util.Arrays;
-
 import edu.cuny.csi.csc330.lab1.ChessBoardPrinter;
 
 public class PlayableChessBoard 
@@ -21,9 +20,10 @@ public class PlayableChessBoard
 	private MoveableGamePiece[][] pieces;
 
 	private Color player;
-	private boolean checkmate;
 	private Position startOfMove;
 	private Position endOfMove;
+	
+	//Used for determining check and checkmate:
 	private Position whiteKingsSquare;
 	private Position blackKingsSquare;
 
@@ -36,9 +36,48 @@ public class PlayableChessBoard
 	/**
 	 * The master method to play a game of chess.
 	 */
+	//Not ready for testing.
 	public void play() 
 	{
-		// TODO Auto-generated method stub
+		boolean kingInCheck;
+		boolean moveWouldPutKingInCheck;
+		boolean illegalMove;
+		
+		do
+		{
+			//Replace this output with GUI output.
+			System.out.println(player + "'s turn:");
+			getNextMove();
+			
+			kingInCheck = true;
+			moveWouldPutKingInCheck = true;
+			illegalMove = true;
+			
+			//Loop to check for an invalid Move and prompt user to try again.
+//			while()
+//			{
+//				//Replace this output with GUI output.
+//				System.err.println("Illegal Move. Please try again.");
+//				getNextMove();
+//			}
+			
+			executeMove(startOfMove, endOfMove);
+			
+			//Switch player for next move.
+			if(player == Color.WHITE)
+			{
+				player = Color.BLACK;
+			}
+			else if (player == Color.BLACK)
+			{
+				player = Color.WHITE;
+			}
+			else
+			{
+				System.err.println("Error. Invalid color of player.");
+				System.exit(4);
+			}
+		}while(!isCheckmate());
 
 	}
 
@@ -61,9 +100,8 @@ public class PlayableChessBoard
 
 	@Override
 	public String toString() {
-		return "PlayableChessBoard [player=" + player + ", checkmate=" + checkmate + ", startOfMove=" + startOfMove
-				+ ", endOfMove=" + endOfMove + ", whiteKingsSquare=" + whiteKingsSquare + ", blackKingsSquare="
-				+ blackKingsSquare + "]";
+		return "PlayableChessBoard [player=" + player + ", startOfMove=" + startOfMove + ", endOfMove=" + endOfMove
+				+ ", whiteKingsSquare=" + whiteKingsSquare + ", blackKingsSquare=" + blackKingsSquare + "]";
 	}
 
 	/**
@@ -172,13 +210,24 @@ public class PlayableChessBoard
 
 		//Make destination hold a reference to the piece being moved.
 		pieces[destination.getRow()][destination.getColumn()] = pieceBeingMoved;
-
+		
 		pieceBeingMoved.setHasNeverMoved(false);
 
 		//Make starting square of move empty.
 		pieces[startingSquare.getRow()][startingSquare.getColumn()] = null;
 
-		//		testPrintPieces();
+		if (pieceBeingMoved.getClass().getSimpleName() == "King")
+		{
+			if(pieceBeingMoved.getColor() == Color.WHITE)
+			{
+				whiteKingsSquare = destination;
+			}
+			else
+			{
+				blackKingsSquare = destination;
+			}
+		}
+//		testPrintPieces();
 
 	}
 
@@ -195,7 +244,7 @@ public class PlayableChessBoard
 	/**
 	 * Method to get the input from the user.
 	 */
-	private void getNextMove()
+	public void getNextMove()
 	{
 		//STUB. Not sure how this will tie into the controller for the GUI.
 	}
@@ -222,7 +271,6 @@ public class PlayableChessBoard
 	{
 		pieces = new MoveableGamePiece[ROWS][COLUMNS];
 		player = Color.WHITE; //White always moves first in chess.
-		checkmate = false;
 		whiteKingsSquare = new Position(0, 4);
 		blackKingsSquare = new Position(7, 4);
 		setUpBoard();
@@ -322,39 +370,39 @@ public class PlayableChessBoard
 		//		System.out.println(board);
 
 		//		System.out.println("Testing Position class:");
-				Position pos = new Position(5, 5);
+//				Position pos = new Position(5,5);
 		//		System.out.println(pos.getRow());
 		//		System.out.println(pos.getColumn());
 		//		System.out.println(pos);
 		//		pos.setRow(7);
 		//		pos.setColumn(0);
 		//		System.out.println(pos);
-				Position pos2 = new Position(7,5);
+//				Position pos2 = new Position(7,5);
 		//		System.out.println(pos.equals(pos2));
 
 //				System.out.println("Testing Bridge Pattern:");
-				MoveableGamePiece piece = new Rook(Color.WHITE);
+//				MoveableGamePiece piece = new Pawn(Color.WHITE);
 		//		System.out.println(piece);
-		//		System.out.println(piece.getHasNeverMoved());
 		//		System.out.println(piece.getColor());
-		//		piece.setHasNeverMoved(false);
-				System.out.println(piece.moveIsValid(pos, pos2, false));
+//				piece.setHasNeverMoved(false);
+//				System.out.println("Never moved: " + piece.getHasNeverMoved());
+//				System.out.println("Valid move: " + piece.moveIsValid(pos, pos2, true));
 		//		System.out.println(piece);
 				
 
-		//		System.out.println("Testing pieceIsCorrectColor method:");
-		//		Position whitePiece = new Position(0,0);
-		//		Position blackPiece = new Position(7,0);
-		//		System.out.println(board.pieceIsCorrectColor(whitePiece));
-		//		System.out.println(board.pieceIsCorrectColor(blackPiece));
+//				System.out.println("Testing pieceIsCorrectColor method:");
+//				Position whitePiece = new Position(0,0);
+//				Position blackPiece = new Position(7,0);
+//				System.out.println(board.pieceIsCorrectColor(whitePiece));
+//				System.out.println(board.pieceIsCorrectColor(blackPiece));
 
-		//		System.out.println("Testing executeMove and testPrint methods: ");
-		//		board.testPrintPieces();
-		//		board.executeMove(new Position (1,3), new Position (3,3));
-		//		board.executeMove(new Position (6,4), new Position (4,4));
-		//		board.executeMove(new Position (0,2), new Position (4,6));
-		//		board.executeMove(new Position (7,3), new Position (4,6));
-		//		board.executeMove(new Position (3,3), new Position (4,4));
+//				System.out.println("Testing executeMove and testPrint methods: ");
+//				board.testPrintPieces();
+//				board.executeMove(new Position (1,3), new Position (3,3));
+//				board.executeMove(new Position (6,4), new Position (4,4));
+//				board.executeMove(new Position (0,2), new Position (4,6));
+//				board.executeMove(new Position (7,3), new Position (4,6));
+//				board.executeMove(new Position (3,3), new Position (4,4));
 		
 
 	}

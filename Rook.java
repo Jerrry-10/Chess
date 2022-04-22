@@ -15,11 +15,11 @@ public final class Rook extends ChessPiece implements MoveableGamePiece {
 		super(color);
 	}
 
-	@Override
 	/**
-	 * Rook can move vertically XOR horizontally on any turn.
-	 * 
+	 * A rook can move vertically XOR horizontally on any turn.
 	 */
+	@Override
+	//Tested.
 	public boolean moveIsValid(Position start, Position end, boolean moveIsACapture) 
 	{
 		return ( ( (start.getRow() - end.getRow() ) == 0 ) ^ 
