@@ -1,7 +1,4 @@
-package edu.cuny.csi.csc330.lab1;
-
-import edu.cuny.csi.csc330.protochess.Color;
-import edu.cuny.csi.csc330.protochess.MoveableGamePiece;
+package chess;
 
 /**
  * Generates a unicode textual chessboard 

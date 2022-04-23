@@ -1,4 +1,4 @@
-package edu.cuny.csi.csc330.protochess;
+package chess;
 
 /**
  * Class to represent a king in chess.

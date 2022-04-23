@@ -1,4 +1,4 @@
-package edu.cuny.csi.csc330.protochess;
+package chess;
 
 /**
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.

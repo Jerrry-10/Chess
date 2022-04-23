@@ -1,4 +1,4 @@
-package edu.cuny.csi.csc330.protochess;
+package chess;
 
 /**
  * Interface for various types of moaveable game pieces, such as chesspieces

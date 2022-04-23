@@ -1,4 +1,4 @@
-package edu.cuny.csi.csc330.protochess;
+package chess;
 
 /**
  * Base class to provide data and functionality shared by all six types of chesspieces.

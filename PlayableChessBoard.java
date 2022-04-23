@@ -1,4 +1,4 @@
-package edu.cuny.csi.csc330.protochess;
+package chess;
 
 /**
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
@@ -7,7 +7,6 @@ package edu.cuny.csi.csc330.protochess;
  */
 
 import java.util.Arrays;
-import edu.cuny.csi.csc330.lab1.ChessBoardPrinter;
 
 public class PlayableChessBoard 
 {
@@ -46,7 +45,7 @@ public class PlayableChessBoard
 		do
 		{
 			//Replace this output with GUI output.
-			System.out.println(player + "'s turn:");
+//			System.out.println(player + "'s turn:");
 			getNextMove();
 			
 			kingInCheck = true;
@@ -58,6 +57,7 @@ public class PlayableChessBoard
 //			{
 //				//Replace this output with GUI output.
 //				System.err.println("Illegal Move. Please try again.");
+			//Be sure to send copy of result back to GUI.
 //				getNextMove();
 //			}
 			
@@ -127,7 +127,7 @@ public class PlayableChessBoard
 					{
 						attackersPosition = new Position (row, column);
 
-						if(isValidMove(attackersPosition, boardSquare) )
+						if(isValidMove(attackersPosition, boardSquare, true) )
 						{
 							inCheck = true;
 						}
@@ -202,7 +202,7 @@ public class PlayableChessBoard
 	 *  that was moved. Any piece previously referenced by the destination square has therefore been dereferenced, 
 	 *  thus the captured piece is no longer "on the board." The starting square now references null (an empty square).
 	 */
-	//Tested
+	
 	private void executeMove(Position startingSquare, Position destination)
 	{
 		MoveableGamePiece pieceBeingMoved = pieces[startingSquare.getRow()]
@@ -227,7 +227,7 @@ public class PlayableChessBoard
 				blackKingsSquare = destination;
 			}
 		}
-//		testPrintPieces();
+		testPrintPieces();
 
 	}
 
@@ -246,23 +246,55 @@ public class PlayableChessBoard
 	 */
 	public void getNextMove()
 	{
-		//STUB. Not sure how this will tie into the controller for the GUI.
+		//Need getters to get the coordinates from the GUI!
+		
+//		int startingRow =
+//		int startingColumn =
+//		int endingRow =
+//		int endingColumn =
+//		
+//		startOfMove = new Position (startingRow, startingColumn);
+//		endOfMove = new Position(endingRow, endingColumn);
 	}
 
 	/**
 	 * Method to determine whether the move the user has entered is legal, assuming "check" is
-	 * not preventing it.
-	 * @precondition This move would not violate the rules about putting a king in/getting him out
-	 * "check".
+	 * not preventing it. This method cannot determine whether "check" is a factor because the
+	 * method isInCheck calls it!
 	 * @param startingSquare   The square (array indices) where the move begins.
 	 * @param destination  The destination square.
+	 * @param moveIsACapture TODO
 	 * @return True if the move is legal. False otherwise.
 	 */
 	//Calls many of the above helper methods.
-	private boolean isValidMove(Position startingSquare, Position destination)
+	private boolean isValidMove(Position startingSquare, Position destination, boolean moveIsACapture)
 	{
-		//STUB
-		return true;
+		
+		if ( (startingSquare.getRow() < 0) || (startingSquare.getRow() > 7) || (startingSquare.getColumn()
+				< 0) || (startingSquare.getColumn() > 7) || (destination.getRow() < 0) ||
+				(destination.getRow() > 7) || (destination.getColumn() < 0) || (destination.getColumn() > 7) )
+		{
+			//Array indices out of bounds.
+			return false;
+		}
+		
+		MoveableGamePiece pieceBeingMoved = pieces[startingSquare.row][startingSquare.getColumn()];
+		
+		/*
+		 * If starting square has no piece on it, has opponent's piece on it,
+		 * or matches destination square, or if another piece blocks the move:
+		 */
+		if ( (pieceBeingMoved == null ) || (startingSquare.equals(destination) ) ||
+				(!pieceIsCorrectColor(startingSquare) ) || 
+				moveIsBlocked(startingSquare, destination) )
+		{
+			return false;
+		}
+		else
+		{
+			//Ask the piece if it can make this move.
+			return pieceBeingMoved.moveIsValid(startingSquare, destination, moveIsACapture);
+		}
 	}
 
 	//Helper Methods for constructor (tested):
@@ -397,12 +429,12 @@ public class PlayableChessBoard
 //				System.out.println(board.pieceIsCorrectColor(blackPiece));
 
 //				System.out.println("Testing executeMove and testPrint methods: ");
-//				board.testPrintPieces();
-//				board.executeMove(new Position (1,3), new Position (3,3));
-//				board.executeMove(new Position (6,4), new Position (4,4));
-//				board.executeMove(new Position (0,2), new Position (4,6));
-//				board.executeMove(new Position (7,3), new Position (4,6));
-//				board.executeMove(new Position (3,3), new Position (4,4));
+				board.testPrintPieces();
+				board.executeMove(new Position (1,3), new Position (3,3));
+				board.executeMove(new Position (6,4), new Position (4,4));
+				board.executeMove(new Position (0,2), new Position (4,6));
+				board.executeMove(new Position (7,3), new Position (4,6));
+				board.executeMove(new Position (3,3), new Position (4,4));
 		
 
 	}
