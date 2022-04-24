@@ -6,12 +6,10 @@ package chess;
  * Class to simulate a chessboard and play chess.
  */
 
-import java.util.Arrays;
-
 public class PlayableChessBoard 
 {
-	final static int ROWS = 8;
-	final static int COLUMNS = 8;
+	private final static int ROWS = 8;
+	private final static int COLUMNS = 8;
 
 	/*Array of References to the interface type. Null references represent empty
 	 * squares on the board.
@@ -30,6 +28,11 @@ public class PlayableChessBoard
 	public PlayableChessBoard()
 	{
 		init();
+	}
+
+	public Color getPlayer() 
+	{
+		return player;
 	}
 
 	/**
@@ -77,15 +80,40 @@ public class PlayableChessBoard
 				System.err.println("Error. Invalid color of player.");
 				System.exit(4);
 			}
-		}while(!isCheckmate());
+		}while(!isCheckmate());//Player has already changed!
 
 	}
 
+	/**
+	 * 
+	 * @return A SHALLOW copy (reference) of the array pieces.
+	 */
+	//Tested.
 	public MoveableGamePiece[][] getPieces() 
 	{
 		return pieces;
 	}
 
+	/**
+	 * 
+	 * @return A DEEP COPY of the array "pieces".
+	 */
+	//Tested.
+	private MoveableGamePiece[][] getDeepCopyOfPieces()
+	{
+		MoveableGamePiece[][] copies = new MoveableGamePiece[ROWS][COLUMNS];
+		
+		for (int row = 0; row < ROWS; row ++)
+		{
+			for (int column = 0; column < COLUMNS; column ++)
+			{
+				copies[row][column] = pieces[row][column];
+			}
+		}
+		
+		return copies;
+	}
+	
 	/**
 	 * Method to print the pieces to the console. Useful for testing other methods.
 	 * @post The elements of the array "pieces" have been interpreted as characters and printed
@@ -165,11 +193,12 @@ public class PlayableChessBoard
 	{
 		//Needs finishing.
 
-		//Freindly piece on destination square.
-		if( pieces[destination.getRow()][destination.getColumn()].getColor()
-				== player)
+		//Friendly piece on destination square.
+		if( (pieces[destination.getRow()][destination.getColumn()] != null) &&
+				(pieces[destination.getRow()][destination.getColumn()].getColor()
+				== player) )
 		{
-			return false;
+			return true; //This part has been tested.
 		} 
 
 		/*
@@ -182,17 +211,23 @@ public class PlayableChessBoard
 		if ( (pieceTryingToMove.getClass().getSimpleName() == "Knight") ||
 				(pieceTryingToMove.getClass().getSimpleName() == "King") )
 		{
+			return false;
+		}
+
+		if (intermediateSquareIsBlocked())//Need logic to implement this!
+		{
 			return true;
 		}
 
-//		if (intermediate square is blocked by a piece of EITHER color)//Need logic to implement this!
-//		{
-//			return false;
-//		}
-
-		return true;
+		return false;
 	}
 
+
+	private boolean intermediateSquareIsBlocked() 
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 	/**
 	 * Method to execute a chess move. Does NOT check whether the move is legal.
@@ -201,8 +236,9 @@ public class PlayableChessBoard
 	 * @post The destination square in the array "pieces" now holds a reference to the piece
 	 *  that was moved. Any piece previously referenced by the destination square has therefore been dereferenced, 
 	 *  thus the captured piece is no longer "on the board." The starting square now references null (an empty square).
+	 *  If a king has been moved, then whiteKingsSquare or blackKingsSquare has been updated to the destination square.
 	 */
-	
+	//Tested.
 	private void executeMove(Position startingSquare, Position destination)
 	{
 		MoveableGamePiece pieceBeingMoved = pieces[startingSquare.getRow()]
@@ -216,18 +252,32 @@ public class PlayableChessBoard
 		//Make starting square of move empty.
 		pieces[startingSquare.getRow()][startingSquare.getColumn()] = null;
 
-		if (pieceBeingMoved.getClass().getSimpleName() == "King")
+		testPrintPieces();
+		
+		if (pieceBeingMoved.getClass().getSimpleName().equals("King"))
 		{
 			if(pieceBeingMoved.getColor() == Color.WHITE)
 			{
 				whiteKingsSquare = destination;
+//				System.out.println("King's Square: " + whiteKingsSquare);
+			}
+			else if (pieceBeingMoved.getColor() == Color.BLACK)
+			{
+				blackKingsSquare = destination;
+//				System.out.println("King's Square: " + blackKingsSquare);
 			}
 			else
 			{
-				blackKingsSquare = destination;
+				System.err.println("Error. Invalid color of pieceBeingMoved in PlayableChessBoard"
+						+ ".executeMove(Position, Position).");
+				System.exit(5);
 			}
 		}
-		testPrintPieces();
+//		else	//Test code.
+//		{
+//			System.out.println("Outer if statement evaluated as false.");
+//		}
+		
 
 	}
 
@@ -237,24 +287,62 @@ public class PlayableChessBoard
 	 */
 	private boolean isCheckmate()
 	{
-		//STUB 
+		Position enemyKingsSquare;
+		Color opponent;
+		
+		if(player == Color.WHITE)
+		{
+			enemyKingsSquare = blackKingsSquare;
+			opponent = Color.BLACK;
+		}
+		else if (player == Color.BLACK)
+		{
+			enemyKingsSquare = whiteKingsSquare;
+			opponent = Color.WHITE;
+		}
+		else
+		{
+			enemyKingsSquare = null; //Null assignments make complier happy.
+			opponent = null;
+			System.err.println("Error. Invalid color of player.");
+			System.exit(4);
+		}
+		
+		return (isInCheck(enemyKingsSquare) && (cantGetOutOfCheck(enemyKingsSquare, opponent) ) );
+	}
+
+	//Needs finishing.
+	private boolean cantGetOutOfCheck(Position enemyKingsSquare, Color opponent) 
+	{
+		MoveableGamePiece[][] dummyPieces = getDeepCopyOfPieces();
+		
+		for (int row = 0; row < ROWS; row ++)
+		{
+			for(int column = 0; column < COLUMNS; column ++)
+			{
+				if( (dummyPieces[row][column] != null) && (dummyPieces[row][column].getColor()
+						== opponent) )
+						{
+					
+						}
+			}
+		}
+		//STUB
 		return false;
+		
 	}
 
 	/**
-	 * Method to get the input from the user.
+	 * Method to get the input from the user/GUI.
 	 */
 	public void getNextMove()
 	{
-		//Need getters to get the coordinates from the GUI!
+		//Need to get the coordinates from the GUI!
 		
-//		int startingRow =
-//		int startingColumn =
-//		int endingRow =
-//		int endingColumn =
-//		
-//		startOfMove = new Position (startingRow, startingColumn);
-//		endOfMove = new Position(endingRow, endingColumn);
+//		startOfMove.setRow();
+//		startOfMove.setColumn();
+//		endOfMove.setRow();
+//		endOfMove.setColumn();
 	}
 
 	/**
@@ -263,7 +351,7 @@ public class PlayableChessBoard
 	 * method isInCheck calls it!
 	 * @param startingSquare   The square (array indices) where the move begins.
 	 * @param destination  The destination square.
-	 * @param moveIsACapture TODO
+	 * @param moveIsACapture True if the move involves capturing an enemy piece. False otherwise.
 	 * @return True if the move is legal. False otherwise.
 	 */
 	//Calls many of the above helper methods.
@@ -278,7 +366,7 @@ public class PlayableChessBoard
 			return false;
 		}
 		
-		MoveableGamePiece pieceBeingMoved = pieces[startingSquare.row][startingSquare.getColumn()];
+		MoveableGamePiece pieceBeingMoved = pieces[startingSquare.getRow()][startingSquare.getColumn()];
 		
 		/*
 		 * If starting square has no piece on it, has opponent's piece on it,
@@ -429,13 +517,32 @@ public class PlayableChessBoard
 //				System.out.println(board.pieceIsCorrectColor(blackPiece));
 
 //				System.out.println("Testing executeMove and testPrint methods: ");
-				board.testPrintPieces();
-				board.executeMove(new Position (1,3), new Position (3,3));
-				board.executeMove(new Position (6,4), new Position (4,4));
-				board.executeMove(new Position (0,2), new Position (4,6));
-				board.executeMove(new Position (7,3), new Position (4,6));
-				board.executeMove(new Position (3,3), new Position (4,4));
+//				board.testPrintPieces();
+//				board.executeMove(new Position (1,3), new Position (3,3));
+//				board.executeMove(new Position (6,4), new Position (4,4));
+//				board.executeMove(new Position (0,2), new Position (4,6));
+//				board.executeMove(new Position (7,3), new Position (4,6));
+//				board.executeMove(new Position (3,3), new Position (4,4));
+//				board.executeMove(new Position (1,4), new Position (3,4));
+//				board.executeMove(new Position (0,4), new Position (1,4));
+//				board.executeMove(new Position (7,4), new Position (6,4));
 		
-
+//				MoveableGamePiece[][] temp = board.getDeepCopyOfPieces();
+//				
+//				for (int i = 0; i < 8; i++)
+//				{
+//					System.out.println("Row: " + i);
+//					for (int j = 0 ; j < 8; j++)
+//					{
+//						if (temp[i][j] != null)
+//						{
+//							System.out.println(temp[i][j].toString());
+//						}
+//					}
+//					System.out.println();
+//				}
+		
+//		System.out.println(board.moveIsBlocked(new Position(0,4), new Position(1,4) ) );
+				
 	}
 }
