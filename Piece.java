@@ -38,6 +38,12 @@ public class Piece {
            x=xp*64;
         y=yp*64;
     }
+    public int getX() {
+    	return x;
+    }
+    public int getY() {
+    	return y;
+    }
     public void kill(){
         ps.remove(this);
     }
