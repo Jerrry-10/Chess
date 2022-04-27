@@ -1,9 +1,9 @@
 package chess;
 
 /**
+ * Class to represent a coordinate pair on a grid, such as a chessboard.
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
- * Class to represent a coordinate pair on a grid, such as a chessboard.
  */
 
 public class Position 

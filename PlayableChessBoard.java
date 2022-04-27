@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Scanner;
+
 /**
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
@@ -38,35 +40,13 @@ public class PlayableChessBoard
 	/**
 	 * The master method to play a game of chess.
 	 */
-	//Not ready for testing.
+	
 	public void play() 
 	{
-		boolean kingInCheck;
-		boolean moveWouldPutKingInCheck;
-		boolean illegalMove;
 		
 		do
 		{
-			//Replace this output with GUI output.
-//			System.out.println(player + "'s turn:");
-			getNextMove();
-			
-			kingInCheck = true;
-			moveWouldPutKingInCheck = true;
-			illegalMove = true;
-			
-			//Loop to check for an invalid Move and prompt user to try again.
-//			while()
-//			{
-//				//Replace this output with GUI output.
-//				System.err.println("Illegal Move. Please try again.");
-			//Be sure to send copy of result back to GUI.
-//				getNextMove();
-//			}
-			
-			executeMove(startOfMove, endOfMove);
-			
-			//Switch player for next move.
+			//Switch player for new move.
 			if(player == Color.WHITE)
 			{
 				player = Color.BLACK;
@@ -80,7 +60,28 @@ public class PlayableChessBoard
 				System.err.println("Error. Invalid color of player.");
 				System.exit(4);
 			}
-		}while(!isCheckmate());//Player has already changed!
+			//Replace this output with GUI output.
+			System.out.println(player + "'s turn:\n");
+			getNextMove();
+			
+			//Loop to check for an invalid Move and prompt user to try again.
+//			while( (!isValidMove(startofMove, endOfMove) ) || 
+//				( (isInCheck(king's square) ) && this move won't get him out) )
+//				|| (isInCheck(endOfMove) 
+//			{
+//				//Replace this output with GUI output.
+//				System.err.println("Illegal Move. Please try again.");
+			//Be sure to send copy of result back to GUI.
+//				getNextMove();
+//			}
+			
+			executeMove(startOfMove, endOfMove);
+			
+		}while(!isCheckmate());
+		
+		//Replace this line with GUI output.
+		System.out.println("CHECKMATE! " + player + "WINS!");
+		System.exit(0);
 
 	}
 
@@ -214,7 +215,7 @@ public class PlayableChessBoard
 			return false;
 		}
 
-		if (intermediateSquareIsBlocked())//Need logic to implement this!
+		if (intermediateSquareIsBlocked(startingSquare, destination))//Need logic to implement this!
 		{
 			return true;
 		}
@@ -223,8 +224,11 @@ public class PlayableChessBoard
 	}
 
 
-	private boolean intermediateSquareIsBlocked() 
+	private boolean intermediateSquareIsBlocked(Position startingSquare, Position destination) 
 	{
+		//Step one: use math on coordinates to identify intermediate squares.
+		//Step two: if all those squares are null, return false. Else, return true.
+		
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -334,15 +338,21 @@ public class PlayableChessBoard
 
 	/**
 	 * Method to get the input from the user/GUI.
+	 * @post startOfMove and endOfMove hold the coordinates of player's intended move.
 	 */
 	public void getNextMove()
 	{
-		//Need to get the coordinates from the GUI!
-		
-//		startOfMove.setRow();
-//		startOfMove.setColumn();
-//		endOfMove.setRow();
-//		endOfMove.setColumn();
+		//We can replace the keyboard input with mouse events later, but I want you to see how this works.
+		Scanner keyboard = new Scanner(System.in);
+		System.out.print("Enter the row number of your piece's starting square: ");
+		startOfMove.setRow(keyboard.nextInt());
+		System.out.print("Enter the column: ");
+		startOfMove.setColumn(keyboard.nextInt());
+		System.out.print("Enter the row number of your piece's destination square: ");
+		endOfMove.setRow(keyboard.nextInt());
+		System.out.print("Enter the column: ");
+		endOfMove.setColumn(keyboard.nextInt());
+		keyboard.close();
 	}
 
 	/**
@@ -390,9 +400,13 @@ public class PlayableChessBoard
 	private void init()
 	{
 		pieces = new MoveableGamePiece[ROWS][COLUMNS];
-		player = Color.WHITE; //White always moves first in chess.
+		
+		//White always moves first in chess, but the color gets swapped at the start of each turn.
+		player = Color.BLACK; 
 		whiteKingsSquare = new Position(0, 4);
 		blackKingsSquare = new Position(7, 4);
+		startOfMove = new Position(0,0);
+		endOfMove = new Position(0,0);
 		setUpBoard();
 	}
 
