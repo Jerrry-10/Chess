@@ -12,6 +12,7 @@ public class PlayableChessBoard
 {
 	private final static int ROWS = 8;
 	private final static int COLUMNS = 8;
+	private Scanner keyboard;
 
 	/*Array of References to the interface type. Null references represent empty
 	 * squares on the board.
@@ -81,6 +82,7 @@ public class PlayableChessBoard
 		
 		//Replace this line with GUI output.
 		System.out.println("CHECKMATE! " + player + "WINS!");
+		keyboard.close();
 		System.exit(0);
 
 	}
@@ -343,7 +345,7 @@ public class PlayableChessBoard
 	public void getNextMove()
 	{
 		//We can replace the keyboard input with mouse events later, but I want you to see how this works.
-		Scanner keyboard = new Scanner(System.in);
+		
 		System.out.print("Enter the row number of your piece's starting square: ");
 		startOfMove.setRow(keyboard.nextInt());
 		System.out.print("Enter the column: ");
@@ -352,7 +354,6 @@ public class PlayableChessBoard
 		endOfMove.setRow(keyboard.nextInt());
 		System.out.print("Enter the column: ");
 		endOfMove.setColumn(keyboard.nextInt());
-		keyboard.close();
 	}
 
 	/**
@@ -407,6 +408,7 @@ public class PlayableChessBoard
 		blackKingsSquare = new Position(7, 4);
 		startOfMove = new Position(0,0);
 		endOfMove = new Position(0,0);
+		keyboard = new Scanner(System.in);
 		setUpBoard();
 	}
 
