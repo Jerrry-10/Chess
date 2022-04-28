@@ -44,6 +44,9 @@ public class PlayableChessBoard
 	
 	public void play() 
 	{
+		//Jerry/Eric, Put code to launch GUI here, on this line.
+		
+		testPrintPieces();
 		
 		do
 		{
@@ -61,8 +64,10 @@ public class PlayableChessBoard
 				System.err.println("Error. Invalid color of player.");
 				System.exit(4);
 			}
+			
 			//Replace this output with GUI output.
 			System.out.println(player + "'s turn:\n");
+			
 			getNextMove();
 			
 			//Loop to check for an invalid Move and prompt user to try again.
@@ -82,6 +87,7 @@ public class PlayableChessBoard
 		
 		//Replace this line with GUI output.
 		System.out.println("CHECKMATE! " + player + "WINS!");
+		
 		keyboard.close();
 		System.exit(0);
 
@@ -89,20 +95,10 @@ public class PlayableChessBoard
 
 	/**
 	 * 
-	 * @return A SHALLOW copy (reference) of the array pieces.
-	 */
-	//Tested.
-	public MoveableGamePiece[][] getPieces() 
-	{
-		return pieces;
-	}
-
-	/**
-	 * 
 	 * @return A DEEP COPY of the array "pieces".
 	 */
 	//Tested.
-	private MoveableGamePiece[][] getDeepCopyOfPieces()
+	public MoveableGamePiece[][] getDeepCopyOfPieces()
 	{
 		MoveableGamePiece[][] copies = new MoveableGamePiece[ROWS][COLUMNS];
 		
@@ -119,8 +115,8 @@ public class PlayableChessBoard
 	
 	/**
 	 * Method to print the pieces to the console. Useful for testing other methods.
-	 * @post The elements of the array "pieces" have been interpreted as characters and printed
-	 * to the console in a chessboard pattern.
+	 * @post The elements of the array "pieces" have been interpreted as Unicode characters
+	 * and printed to the console in a chessboard pattern.
 	 */
 	//Tested
 	public void testPrintPieces() 
@@ -194,14 +190,14 @@ public class PlayableChessBoard
 	 */
 	private boolean moveIsBlocked(Position startingSquare, Position destination)
 	{
-		//Needs finishing.
+		//Needs testing.
 
-		//Friendly piece on destination square.
+		//FRIENDLY piece already on destination square.
 		if( (pieces[destination.getRow()][destination.getColumn()] != null) &&
 				(pieces[destination.getRow()][destination.getColumn()].getColor()
 				== player) )
 		{
-			return true; //This part has been tested.
+			return true;
 		} 
 
 		/*
@@ -211,13 +207,14 @@ public class PlayableChessBoard
 		MoveableGamePiece pieceTryingToMove = pieces[startingSquare.getRow()]
 				[startingSquare.getColumn()];  
 
-		if ( (pieceTryingToMove.getClass().getSimpleName() == "Knight") ||
-				(pieceTryingToMove.getClass().getSimpleName() == "King") )
+		if ( (pieceTryingToMove.getClass().getSimpleName().equals("Knight") ) ||
+				(pieceTryingToMove.getClass().getSimpleName().equals("King") ) )
 		{
 			return false;
 		}
 
-		if (intermediateSquareIsBlocked(startingSquare, destination))//Need logic to implement this!
+		//A piece of EITHER color on an intermediate square can block the move.
+		if (intermediateSquareIsBlocked(startingSquare, destination))
 		{
 			return true;
 		}
@@ -225,13 +222,161 @@ public class PlayableChessBoard
 		return false;
 	}
 
-
+	/**
+	 * Method to determine whether a proposed move for a pawn, bishop, rook, or queen moving more than 
+	 * one square is blocked by a piece of either color on an intermediate square. Does NOT test
+	 * whether destination square is blocked.
+	 * @param startingSquare The square (array indices) where the move begins.
+	 * @param destination The destination square.
+	 * @precondition The move is horizontal (columns change but rows do not), vertical (rows change but columns
+	 * do not), or properly diagonal (rows and columns change by the same amount).
+	 * @return True if the move is blocked in that manner; false otherwise.
+	 */
+	
 	private boolean intermediateSquareIsBlocked(Position startingSquare, Position destination) 
-	{
-		//Step one: use math on coordinates to identify intermediate squares.
-		//Step two: if all those squares are null, return false. Else, return true.
+	{	
+		if(startingSquare.equals(destination))
+		{
+			System.err.println("Invalid arguments passed to intermediateSquareIsBlocked.");
+			System.exit(5);
+		}
 		
-		// TODO Auto-generated method stub
+		//Hypothetically, Version 2.0 would probably break this up into multiple methods.
+		
+		boolean movingLeft = false;
+		boolean movingRight = false;
+		boolean movingUp = false;
+		boolean movingDown = false;
+		boolean notMovingHorizontally = false;
+		boolean notMovingVertically = false;
+		
+		//Step one: figure out which way the piece is going.	
+		if( (startingSquare.getColumn() - destination.getColumn() ) > 0)
+		{
+			movingLeft = true;
+		}
+		else if ( (startingSquare.getColumn() - destination.getColumn() ) < 0 )
+		{
+			movingRight = true;
+		}
+		else
+		{
+			notMovingHorizontally = true;
+		}
+
+		if ( (startingSquare.getRow() - destination.getRow() ) < 0)
+		{
+			movingUp = true;
+		}
+		else if ( (startingSquare.getRow() - destination.getRow() ) > 0)
+		{
+			movingDown = true;
+		}
+		else
+		{
+			notMovingVertically = true;
+		}
+		
+		/*
+		 *  Step two: use math on coordinates to count intermediate squares.
+		 *  Subtract 1 at the end to avoid counting the destination square.
+		 */	
+		int  numberOfIntermediateSquares;
+		Position [] intermediateSquares;
+		
+		try
+		{
+			/*
+			 * If the row changes, either the column does not change or the piece is moving diagonally.
+			 * If it is moving diagonally, then the row and column are changing by the same amount, so
+			 * we only need to check one. However, if only the column is changing, then the math on the
+			 * next line will result in -1 (an invalid array size), which signals that we should use the
+			 * columns instead.
+			 */
+			numberOfIntermediateSquares = Math.abs( (startingSquare.getRow() - destination.getRow() ) ) - 1;
+			intermediateSquares = new Position [numberOfIntermediateSquares];
+		}
+		catch(NegativeArraySizeException e)
+		{
+			numberOfIntermediateSquares = Math.abs( (startingSquare.getColumn() - destination.getColumn() ) ) - 1;
+			intermediateSquares = new Position [numberOfIntermediateSquares];
+		}
+		
+		//Step three: identify the immediate squares.
+		
+		int row = startingSquare.getRow();
+		int col = startingSquare.getColumn();
+		
+		if(movingRight && notMovingVertically)
+		{
+			for (int i = 0; i < numberOfIntermediateSquares; i++)
+			{
+				intermediateSquares[i] = new Position(row, ++col);
+			}
+		}
+		else if(movingLeft && notMovingVertically)
+		{
+			for (int i = 0; i < numberOfIntermediateSquares; i++)
+			{
+				intermediateSquares[i] = new Position(row, --col);
+			}
+		}
+		else if(movingLeft && movingUp)
+		{
+			for (int i = 0; i < numberOfIntermediateSquares; i++)
+			{
+				intermediateSquares[i] = new Position(++row, --col);
+			}
+		}
+		else if(movingLeft && movingDown)
+		{
+			for (int i = 0; i < numberOfIntermediateSquares; i++)
+			{
+				intermediateSquares[i] = new Position(--row, --col);
+			}
+		}
+		else if(movingRight && movingUp)
+		{
+			for (int i = 0; i < numberOfIntermediateSquares; i++)
+			{
+				intermediateSquares[i] = new Position(++row, ++col);
+			}
+		}
+		else if(movingRight && movingDown)
+		{
+			for (int i = 0; i < numberOfIntermediateSquares; i++)
+			{
+				intermediateSquares[i] = new Position(--row, ++col);
+			}
+		}
+		else if(movingUp && notMovingHorizontally)
+		{
+			for (int i = 0; i < numberOfIntermediateSquares; i++)
+			{
+				intermediateSquares[i] = new Position(++row, col);
+			}
+		}
+		else if(movingDown && notMovingHorizontally)
+		{
+			for (int i = 0; i < numberOfIntermediateSquares; i++)
+			{
+				intermediateSquares[i] = new Position(--row, col);
+			}
+		}
+		else
+		{
+			System.err.println("Fatal error in PlayableChessBoard.intermediateSquareIsBlocked.");
+		}
+		
+		//Step four: if any of those squares are not null, move is blocked.
+		for(Position pos : intermediateSquares)
+		{
+			if (pieces[pos.getRow()][pos.getColumn()] != null)
+			{
+				return true;
+			}
+		}
+		
 		return false;
 	}
 
@@ -385,7 +530,7 @@ public class PlayableChessBoard
 		 */
 		if ( (pieceBeingMoved == null ) || (startingSquare.equals(destination) ) ||
 				(!pieceIsCorrectColor(startingSquare) ) || 
-				moveIsBlocked(startingSquare, destination) )
+				moveIsBlocked(startingSquare, destination) )//Finish test moveIsBlocked.
 		{
 			return false;
 		}
@@ -485,7 +630,11 @@ public class PlayableChessBoard
 		}
 	}
 
-	//This main is for testing individual methods. Our program's real launch point is ProtoChessLauncher.main();
+	/**
+	 * This main is for testing individual methods. Our program's real launch point is 
+	 * ProtoChessLauncher.main();
+	 * @param args
+	 */
 	public static void main(String[] args) 
 	{
 		PlayableChessBoard board = new PlayableChessBoard();
@@ -558,7 +707,9 @@ public class PlayableChessBoard
 //					System.out.println();
 //				}
 		
-//		System.out.println(board.moveIsBlocked(new Position(0,4), new Position(1,4) ) );
+//		System.out.println(board.moveIsBlocked(new Position(0,1), new Position(2,0) ) );
+		
+		System.out.println(board.intermediateSquareIsBlocked(new Position(1,7), new Position(1,0) ) );
 				
 	}
 }
