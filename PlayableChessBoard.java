@@ -71,15 +71,16 @@ public class PlayableChessBoard
 			getNextMove();
 			
 			//Loop to check for an invalid Move and prompt user to try again.
-//			while( (!isValidMove(startofMove, endOfMove) ) || 
-//				( (isInCheck(king's square) ) && this move won't get him out) )
-//				|| (isInCheck(endOfMove) 
-//			{
+			while( (!isValidMove(startOfMove, endOfMove) ) 
+//			|| ( (isInCheck(king's square) ) && (this move won't get him out) )
+//				|| (isInCheck(endOfMove) )  //fix logic on this line.
+				)
+			{
 //				//Replace this output with GUI output.
-//				System.err.println("Illegal Move. Please try again.");
+				System.err.println("Illegal Move. Please try again.");
 			//Be sure to send copy of result back to GUI.
-//				getNextMove();
-//			}
+				getNextMove();
+			}
 			
 			executeMove(startOfMove, endOfMove);
 			
@@ -154,7 +155,7 @@ public class PlayableChessBoard
 					{
 						attackersPosition = new Position (row, column);
 
-						if(isValidMove(attackersPosition, boardSquare, true) )
+						if(isValidMove(attackersPosition, boardSquare) )
 						{
 							inCheck = true;
 						}
@@ -188,10 +189,9 @@ public class PlayableChessBoard
 	 * @param end The destination square.
 	 * @return True if another piece is blocking the move. False otherwise.
 	 */
+	//Tested.
 	private boolean moveIsBlocked(Position startingSquare, Position destination)
 	{
-		//Needs testing.
-
 		//FRIENDLY piece already on destination square.
 		if( (pieces[destination.getRow()][destination.getColumn()] != null) &&
 				(pieces[destination.getRow()][destination.getColumn()].getColor()
@@ -232,7 +232,7 @@ public class PlayableChessBoard
 	 * do not), or properly diagonal (rows and columns change by the same amount).
 	 * @return True if the move is blocked in that manner; false otherwise.
 	 */
-	
+	//Tested successfully.
 	private boolean intermediateSquareIsBlocked(Position startingSquare, Position destination) 
 	{	
 		if(startingSquare.equals(destination))
@@ -507,12 +507,13 @@ public class PlayableChessBoard
 	 * method isInCheck calls it!
 	 * @param startingSquare   The square (array indices) where the move begins.
 	 * @param destination  The destination square.
-	 * @param moveIsACapture True if the move involves capturing an enemy piece. False otherwise.
 	 * @return True if the move is legal. False otherwise.
 	 */
 	//Calls many of the above helper methods.
-	private boolean isValidMove(Position startingSquare, Position destination, boolean moveIsACapture)
+	private boolean isValidMove(Position startingSquare, Position destination)
 	{
+		
+		boolean moveIsACapture = false;
 		
 		if ( (startingSquare.getRow() < 0) || (startingSquare.getRow() > 7) || (startingSquare.getColumn()
 				< 0) || (startingSquare.getColumn() > 7) || (destination.getRow() < 0) ||
@@ -530,15 +531,17 @@ public class PlayableChessBoard
 		 */
 		if ( (pieceBeingMoved == null ) || (startingSquare.equals(destination) ) ||
 				(!pieceIsCorrectColor(startingSquare) ) || 
-				moveIsBlocked(startingSquare, destination) )//Finish test moveIsBlocked.
+				moveIsBlocked(startingSquare, destination) )
 		{
 			return false;
 		}
-		else
+		else if ( (pieces[destination.getRow()][destination.getColumn()] != null) &&
+				(pieces[destination.getRow()][destination.getColumn()].getColor() != player) )
 		{
-			//Ask the piece if it can make this move.
-			return pieceBeingMoved.moveIsValid(startingSquare, destination, moveIsACapture);
+			moveIsACapture = true;	
 		}
+		//Ask the piece if it can make this move.
+		return pieceBeingMoved.moveIsValid(startingSquare, destination, moveIsACapture);
 	}
 
 	//Helper Methods for constructor (tested):
@@ -705,11 +708,12 @@ public class PlayableChessBoard
 //						}
 //					}
 //					System.out.println();
-//				}
+//				}	
 		
-//		System.out.println(board.moveIsBlocked(new Position(0,1), new Position(2,0) ) );
-		
-		System.out.println(board.intermediateSquareIsBlocked(new Position(1,7), new Position(1,0) ) );
+//		System.out.println(board.intermediateSquareIsBlocked(new Position(7,7), new Position(0,0) ) );
+//		board.executeMove(new Position(1,4), new Position(3,4));
+//		System.out.println(board.moveIsBlocked(new Position(7,1), new Position(5,2) ) );
+//		System.out.println(board.isValidMove(new Position(6,1), new Position(5,2), true) );
 				
 	}
 }
