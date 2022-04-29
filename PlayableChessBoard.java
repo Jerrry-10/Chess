@@ -61,7 +61,7 @@ public class PlayableChessBoard
 			}
 			else
 			{
-				System.err.println("Error. Invalid color of player.");
+				System.err.println("Error. Invalid color of player in PlayableChessBoard.play().");
 				System.exit(4);
 			}
 			
@@ -71,9 +71,8 @@ public class PlayableChessBoard
 			getNextMove();
 			
 			//Loop to check for an invalid Move and prompt user to try again.
-			while( (!isValidMove(startOfMove, endOfMove) ) 
-//			|| ( (isInCheck(king's square) ) && (this move won't get him out) )
-//				|| (isInCheck(endOfMove) )  //fix logic on this line.
+			while( (!isValidMove(startOfMove, endOfMove, pieces) ) 
+//			|| ( (isInCheck(king's square) )
 				)
 			{
 //				//Replace this output with GUI output.
@@ -133,38 +132,60 @@ public class PlayableChessBoard
 	}
 
 	/**
-	 * Method to determine whether current player's king is/would be "in check" if positioned on a given square.
-	 * @param boardSquare The Position whose coordinates match the array indices of the square on the board
-	 * 	being evaluated.
+	 * Method to determine whether current player's king would be "in check" after a given move, either
+	 * because the move puts him into check, or because the opponent has already put him into check and this move
+	 * will not get him out.
+	 * @param startOfMove The square where the proposed move begins.
+	 * @param destination The destination of the piece being moved.
 	 * @return True if player's king would be in check if positioned on boardSquare. False otherwise.
 	 */
-	private boolean isInCheck(Position boardSquare)
+	private boolean isInCheck(Position startOfMove, Position destination)
 	{
-		//Can't test this method until we implement method isValidMove.
-
-		Position attackersPosition;
+		MoveableGamePiece[][] dummyPieces = getDeepCopyOfPieces();
+		
+		/*
+		 * Execute the move on a DISPOSABLE DEEP COPY of the array. This enables us to make the move for
+		 * testing without changing the "real" array.
+		 */
+		dummyPieces[destination.getRow()][destination.getColumn()] = 
+				dummyPieces[startOfMove.getRow()][startOfMove.getColumn()];
+		dummyPieces[startOfMove.getRow()][startOfMove.getColumn()] = null;
+		
+		Position kingsSquare;
+		
+		if(player == Color.WHITE)
+		{
+			kingsSquare = whiteKingsSquare;
+		}
+		else if(player == Color.BLACK)
+		{
+			kingsSquare = blackKingsSquare;
+		}
+		else
+		{
+			kingsSquare = null;
+			System.err.println("Error. Invalid value of player in PlayableChessBoard.isInCheck(Positon, position)");
+			System.exit(4);
+		}
+		
 		boolean inCheck = false;
-
+		
 		for (int row = 0; row < ROWS; row++)
 		{
-			for (int column = 0 ; column < COLUMNS; column++)
+			for(int col = 0; col < COLUMNS; col++)
 			{
-				if (pieces[row][column] != null)
+				if( (dummyPieces[row][col] != null) && (dummyPieces[row][col].getColor() != player) )
 				{
-					if (pieces[row][column].getColor() != player)
+					//if any enemy piece can move to the king's square:
+					Position attacker = new Position (row, col);
+					if(isValidMove(attacker, kingsSquare, dummyPieces))
 					{
-						attackersPosition = new Position (row, column);
-
-						if(isValidMove(attackersPosition, boardSquare) )
-						{
-							inCheck = true;
-						}
+						inCheck = true;
 					}
-
 				}
 			}
-
 		}
+		
 		return inCheck;
 	}
 
@@ -459,7 +480,7 @@ public class PlayableChessBoard
 			System.exit(4);
 		}
 		
-		return (isInCheck(enemyKingsSquare) && (cantGetOutOfCheck(enemyKingsSquare, opponent) ) );
+		return false;
 	}
 
 	//Needs finishing.
@@ -507,10 +528,12 @@ public class PlayableChessBoard
 	 * method isInCheck calls it!
 	 * @param startingSquare   The square (array indices) where the move begins.
 	 * @param destination  The destination square.
+	 * @param pieces The array of pieces being tested.
 	 * @return True if the move is legal. False otherwise.
 	 */
 	//Calls many of the above helper methods.
-	private boolean isValidMove(Position startingSquare, Position destination)
+	//Tested.
+	private boolean isValidMove(Position startingSquare, Position destination, MoveableGamePiece[][] pieces)
 	{
 		
 		boolean moveIsACapture = false;
@@ -713,7 +736,7 @@ public class PlayableChessBoard
 //		System.out.println(board.intermediateSquareIsBlocked(new Position(7,7), new Position(0,0) ) );
 //		board.executeMove(new Position(1,4), new Position(3,4));
 //		System.out.println(board.moveIsBlocked(new Position(7,1), new Position(5,2) ) );
-//		System.out.println(board.isValidMove(new Position(6,1), new Position(5,2), true) );
+//		System.out.println(board.isValidMove(new Position(6,1), new Position(5,0), board.pieces) );
 				
 	}
 }
