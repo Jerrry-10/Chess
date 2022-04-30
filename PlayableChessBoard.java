@@ -45,7 +45,7 @@ public class PlayableChessBoard
 	public void play() 
 	{
 		//Jerry/Eric, Put code to launch GUI here, on this line.
-		GUI.display();
+		
 		testPrintPieces();
 		
 		do
@@ -139,7 +139,7 @@ public class PlayableChessBoard
 	 * @param destination The destination of the piece being moved.
 	 * @return True if player's king would be in check if positioned on boardSquare. False otherwise.
 	 */
-	private boolean isInCheck(Position startOfMove, Position destination)
+	private boolean wouldBeInCheck(Position startOfMove, Position destination)
 	{
 		MoveableGamePiece[][] dummyPieces = getDeepCopyOfPieces();
 		
@@ -192,14 +192,21 @@ public class PlayableChessBoard
 	/**
 	 * Method to check whether the piece the player is trying to move is the correct color.
 	 * @param boardSquare The position in the array of the piece to be moved.
+	 * @param pieces The array of pieces being tested.
 	 * @return True if the piece is the player's color, false otherwise.
 	 */
 	//Tested successfully.
-	private boolean pieceIsCorrectColor(Position boardSquare)
+	private boolean pieceIsCorrectColor(Position boardSquare, MoveableGamePiece[][] pieces)
 	{
 		int row = boardSquare.getRow();
 		int col = boardSquare.getColumn();
-
+		
+//		if (pieces[row][col] == null)
+//		{
+//			System.err.println("How can the piece be null? We ALREADY TESTED THAT in the calling method!");
+//			System.exit(5);
+//		}
+		
 		return ( pieces[row][col].getColor() == player);
 	}
 
@@ -548,12 +555,19 @@ public class PlayableChessBoard
 		
 		MoveableGamePiece pieceBeingMoved = pieces[startingSquare.getRow()][startingSquare.getColumn()];
 		
+//		System.out.println(pieceBeingMoved);
+//		System.out.println(startingSquare);
+		
 		/*
 		 * If starting square has no piece on it, has opponent's piece on it,
 		 * or matches destination square, or if another piece blocks the move:
 		 */
-		if ( (pieceBeingMoved == null ) || (startingSquare.equals(destination) ) ||
-				(!pieceIsCorrectColor(startingSquare) ) || 
+		if ( pieceBeingMoved == null )
+		{
+			return false;
+		}	
+		
+		else if(startingSquare.equals(destination) || (!pieceIsCorrectColor(startingSquare, pieces) ) || 
 				moveIsBlocked(startingSquare, destination) )
 		{
 			return false;
@@ -737,6 +751,14 @@ public class PlayableChessBoard
 //		board.executeMove(new Position(1,4), new Position(3,4));
 //		System.out.println(board.moveIsBlocked(new Position(7,1), new Position(5,2) ) );
 //		System.out.println(board.isValidMove(new Position(6,1), new Position(5,0), board.pieces) );
-				
+		
+		System.out.println(board.wouldBeInCheck(new Position(1,4), new Position(3,4)));
+		board.executeMove(new Position(1,4), new Position(3,4));
+		System.out.println(board.wouldBeInCheck(new Position(6,6), new Position(4,6)));
+		board.executeMove(new Position(6,6), new Position(4,6));
+		System.out.println(board.wouldBeInCheck(new Position(0,3), new Position(4,7)));
+		board.executeMove(new Position(0,3), new Position(4,7));
+		System.out.println(board.wouldBeInCheck(new Position(6,5), new Position(5,5)));
+		board.executeMove(new Position(6,5), new Position(5,5));
 	}
 }
