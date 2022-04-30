@@ -1,12 +1,13 @@
 package chess;
 
-import java.util.Scanner;
-
 /**
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
  * Class to simulate a chessboard and play chess.
  */
+
+import java.util.Scanner;
+import javax.swing.JOptionPane;
 
 public class PlayableChessBoard 
 {
@@ -45,7 +46,7 @@ public class PlayableChessBoard
 	public void play() 
 	{
 		//Jerry/Eric, Put code to launch GUI here, on this line.
-		GUI.display();
+		
 		testPrintPieces();
 		
 		do
@@ -61,12 +62,12 @@ public class PlayableChessBoard
 			}
 			else
 			{
-				System.err.println("Error. Invalid color of player in PlayableChessBoard.play().");
+				JOptionPane.showMessageDialog(null, "Error. Invalid color of player in PlayableChessBoard.play().");
 				System.exit(4);
 			}
 			
-			//Replace this output with GUI output.
-			System.out.println(player + "'s turn:\n");
+			//If you want to move this into the GUI files, we can talk about that.
+			JOptionPane.showMessageDialog(null, player + "'s turn.");
 			
 			getNextMove();
 			
@@ -75,8 +76,7 @@ public class PlayableChessBoard
 //			|| ( (isInCheck(king's square) )
 				)
 			{
-//				//Replace this output with GUI output.
-				System.err.println("Illegal Move. Please try again.");
+				JOptionPane.showMessageDialog(null, "Illegal Move. Please try again.");
 			//Be sure to send copy of result back to GUI.
 				getNextMove();
 			}
@@ -85,8 +85,7 @@ public class PlayableChessBoard
 			
 		}while(!isCheckmate());
 		
-		//Replace this line with GUI output.
-		System.out.println("CHECKMATE! " + player + "WINS!");
+		JOptionPane.showMessageDialog(null, "CHECKMATE! " + player + "WINS!");
 		
 		keyboard.close();
 		System.exit(0);
@@ -139,7 +138,7 @@ public class PlayableChessBoard
 	 * @param destination The destination of the piece being moved.
 	 * @return True if player's king would be in check if positioned on boardSquare. False otherwise.
 	 */
-	private boolean isInCheck(Position startOfMove, Position destination)
+	private boolean wouldBeInCheck(Position startOfMove, Position destination)
 	{
 		MoveableGamePiece[][] dummyPieces = getDeepCopyOfPieces();
 		
@@ -192,14 +191,21 @@ public class PlayableChessBoard
 	/**
 	 * Method to check whether the piece the player is trying to move is the correct color.
 	 * @param boardSquare The position in the array of the piece to be moved.
+	 * @param pieces The array of pieces being tested.
 	 * @return True if the piece is the player's color, false otherwise.
 	 */
 	//Tested successfully.
-	private boolean pieceIsCorrectColor(Position boardSquare)
+	private boolean pieceIsCorrectColor(Position boardSquare, MoveableGamePiece[][] pieces)
 	{
 		int row = boardSquare.getRow();
 		int col = boardSquare.getColumn();
-
+		
+//		if (pieces[row][col] == null)
+//		{
+//			System.err.println("How can the piece be null? We ALREADY TESTED THAT in the calling method!");
+//			System.exit(5);
+//		}
+		
 		return ( pieces[row][col].getColor() == player);
 	}
 
@@ -258,7 +264,7 @@ public class PlayableChessBoard
 	{	
 		if(startingSquare.equals(destination))
 		{
-			System.err.println("Invalid arguments passed to intermediateSquareIsBlocked.");
+			JOptionPane.showMessageDialog(null, "Invalid arguments passed to intermediateSquareIsBlocked.");
 			System.exit(5);
 		}
 		
@@ -386,7 +392,7 @@ public class PlayableChessBoard
 		}
 		else
 		{
-			System.err.println("Fatal error in PlayableChessBoard.intermediateSquareIsBlocked.");
+			JOptionPane.showMessageDialog(null, "Fatal error in PlayableChessBoard.intermediateSquareIsBlocked.");
 		}
 		
 		//Step four: if any of those squares are not null, move is blocked.
@@ -440,7 +446,7 @@ public class PlayableChessBoard
 			}
 			else
 			{
-				System.err.println("Error. Invalid color of pieceBeingMoved in PlayableChessBoard"
+				JOptionPane.showMessageDialog(null, "Error. Invalid color of pieceBeingMoved in PlayableChessBoard"
 						+ ".executeMove(Position, Position).");
 				System.exit(5);
 			}
@@ -476,7 +482,7 @@ public class PlayableChessBoard
 		{
 			enemyKingsSquare = null; //Null assignments make complier happy.
 			opponent = null;
-			System.err.println("Error. Invalid color of player.");
+			JOptionPane.showMessageDialog(null, "Error. Invalid color of player.");
 			System.exit(4);
 		}
 		
@@ -548,12 +554,19 @@ public class PlayableChessBoard
 		
 		MoveableGamePiece pieceBeingMoved = pieces[startingSquare.getRow()][startingSquare.getColumn()];
 		
+//		System.out.println(pieceBeingMoved);
+//		System.out.println(startingSquare);
+		
 		/*
 		 * If starting square has no piece on it, has opponent's piece on it,
-		 * or matches destination square, or if another piece blocks the move:
+		 * or matches destination square, or if another piece blocks the move, move is not valid.
 		 */
-		if ( (pieceBeingMoved == null ) || (startingSquare.equals(destination) ) ||
-				(!pieceIsCorrectColor(startingSquare) ) || 
+		if ( pieceBeingMoved == null )
+		{
+			return false;
+		}	
+		
+		else if(startingSquare.equals(destination) || (!pieceIsCorrectColor(startingSquare, pieces) ) || 
 				moveIsBlocked(startingSquare, destination) )
 		{
 			return false;
@@ -615,7 +628,7 @@ public class PlayableChessBoard
 				setUpSeniorPieces(Color.BLACK, row);
 				break;
 			default:
-				System.err.println("Invalid value of row in PlayableChessBoard.setUpBoard().");
+				JOptionPane.showMessageDialog(null, "Invalid value of row in PlayableChessBoard.setUpBoard().");
 				System.exit(1);
 
 			}
@@ -649,7 +662,7 @@ public class PlayableChessBoard
 				pieces[row][col] = new King(color);
 				break;
 			default:
-				System.err.println("Invalid value of col in PlayableChessBoard.setUpSeniorPieces().");
+				JOptionPane.showMessageDialog(null, "Invalid value of col in PlayableChessBoard.setUpSeniorPieces().");
 				System.exit(2);
 
 			}
@@ -737,6 +750,14 @@ public class PlayableChessBoard
 //		board.executeMove(new Position(1,4), new Position(3,4));
 //		System.out.println(board.moveIsBlocked(new Position(7,1), new Position(5,2) ) );
 //		System.out.println(board.isValidMove(new Position(6,1), new Position(5,0), board.pieces) );
-				
+		
+		System.out.println(board.wouldBeInCheck(new Position(1,4), new Position(3,4)));
+		board.executeMove(new Position(1,4), new Position(3,4));
+		System.out.println(board.wouldBeInCheck(new Position(6,6), new Position(4,6)));
+		board.executeMove(new Position(6,6), new Position(4,6));
+		System.out.println(board.wouldBeInCheck(new Position(0,3), new Position(4,7)));
+		board.executeMove(new Position(0,3), new Position(4,7));
+		System.out.println(board.wouldBeInCheck(new Position(6,5), new Position(5,5)));
+		board.executeMove(new Position(6,5), new Position(5,5));
 	}
 }
