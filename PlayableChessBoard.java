@@ -46,7 +46,7 @@ public class PlayableChessBoard
 	public void play() 
 	{
 		//Jerry/Eric, Put code to launch GUI here, on this line.
-		
+		GUI.display();
 		testPrintPieces();
 		
 		do
