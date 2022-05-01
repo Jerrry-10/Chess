@@ -22,7 +22,7 @@ public class GUI {
 	public static void display()  {
 		BufferedImage all= null;
 		try{
-			all = ImageIO.read(new File("C:\\Users\\Jerry\\eclipse-workspace\\Chess\\src\\chess\\chess.png"));
+			all = ImageIO.read(new File("C:\\Users\\Jerry\\eclipse-workspace\\CSC330\\src\\chess\\chess.png"));
 		} catch(IOException e) {}
         Image imgs[]=new Image[12];
         int ind=0;
