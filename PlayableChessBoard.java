@@ -18,7 +18,7 @@ public class PlayableChessBoard
 	/*Array of References to the interface type. Null references represent empty
 	 * squares on the board.
 	 */
-	private MoveableGamePiece[][] pieces;
+	private static MoveableGamePiece[][] pieces = new MoveableGamePiece[ROWS][COLUMNS];
 
 	private Color player;
 	private Position startOfMove;
@@ -28,6 +28,11 @@ public class PlayableChessBoard
 	private Position whiteKingsSquare;
 	private Position blackKingsSquare;
 
+	static
+	{
+		setUpBoard();
+	}
+	
 	//Tested successfully.
 	public PlayableChessBoard()
 	{
@@ -93,11 +98,15 @@ public class PlayableChessBoard
 	}
 
 	/**
-	 * 
+	 * Method to return a deep copy of pieces.
+	 * WARNING! DO NOT call the method "setHasNeverMoved" on any pieces in the
+	 * array returned by this method! The ARRAY is a deep copy, but it might contain
+	 * COPIES OF REFERENCES to the same original piece objects. Calling "setHasNeverMoved"
+	 * on the array's contents might break the code. This method should only be called outside
+	 * of this class as a last resort!
 	 * @return A DEEP COPY of the array "pieces".
 	 */
-	//Tested.
-	public MoveableGamePiece[][] getDeepCopyOfPieces()
+	public static MoveableGamePiece[][] getDeepCopyOfPieces()
 	{
 		MoveableGamePiece[][] copies = new MoveableGamePiece[ROWS][COLUMNS];
 		
@@ -163,7 +172,8 @@ public class PlayableChessBoard
 		else
 		{
 			kingsSquare = null;
-			System.err.println("Error. Invalid value of player in PlayableChessBoard.isInCheck(Positon, position)");
+			JOptionPane.showMessageDialog(null, "Error. Invalid value of player in PlayableChessBoard.isInCheck"
+					+ "(Positon, Position)");
 			System.exit(4);
 		}
 		
@@ -463,6 +473,7 @@ public class PlayableChessBoard
 	 * 
 	 * @return True if the player has checkmated his/her opponent. False otherwise.
 	 */
+	//STUB
 	private boolean isCheckmate()
 	{
 		Position enemyKingsSquare;
@@ -580,12 +591,10 @@ public class PlayableChessBoard
 		return pieceBeingMoved.moveIsValid(startingSquare, destination, moveIsACapture);
 	}
 
-	//Helper Methods for constructor (tested):
+	//Helper Methods for constructors (tested):
 
 	private void init()
-	{
-		pieces = new MoveableGamePiece[ROWS][COLUMNS];
-		
+	{	
 		//White always moves first in chess, but the color gets swapped at the start of each turn.
 		player = Color.BLACK; 
 		whiteKingsSquare = new Position(0, 4);
@@ -593,10 +602,9 @@ public class PlayableChessBoard
 		startOfMove = new Position(0,0);
 		endOfMove = new Position(0,0);
 		keyboard = new Scanner(System.in);
-		setUpBoard();
 	}
 
-	private void setUpBoard() 
+	private static void setUpBoard() 
 	{
 		for (int row = 0; row < ROWS; row++ )
 		{
@@ -637,7 +645,7 @@ public class PlayableChessBoard
 
 	}
 
-	private void setUpSeniorPieces(Color color, int row) 
+	private static void setUpSeniorPieces(Color color, int row) 
 	{
 		for (int col = 0; col < COLUMNS; col++)
 		{
