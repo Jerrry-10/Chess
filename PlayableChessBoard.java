@@ -147,6 +147,7 @@ public class PlayableChessBoard
 	 * @param destination The destination of the piece being moved.
 	 * @return True if player's king would be in check if positioned on boardSquare. False otherwise.
 	 */
+	//BROKEN METHOD! DO NOT USE!
 	private boolean wouldBeInCheck(Position startOfMove, Position destination)
 	{
 		MoveableGamePiece[][] dummyPieces = getDeepCopyOfPieces();
@@ -183,7 +184,7 @@ public class PlayableChessBoard
 		{
 			for(int col = 0; col < COLUMNS; col++)
 			{
-				if( (dummyPieces[row][col] != null) && (dummyPieces[row][col].getColor() != player) )
+				if( (dummyPieces[row][col] != null) && (dummyPieces[row][col].getColor() == player) )
 				{
 					//if any enemy piece can move to the king's square:
 					Position attacker = new Position (row, col);
@@ -530,13 +531,22 @@ public class PlayableChessBoard
 		//We can replace the keyboard input with mouse events later, but I want you to see how this works.
 		
 		System.out.print("Enter the row number of your piece's starting square: ");
-		startOfMove.setRow(keyboard.nextInt());
-		System.out.print("Enter the column: ");
-		startOfMove.setColumn(keyboard.nextInt());
+		startOfMove.setRow(keyboard.nextInt() - 1);
+		
+		System.out.print("Enter the starting column letter: ");
+		keyboard.nextLine(); //Remove '\n' from buffer.
+		String input = keyboard.nextLine();
+		char temp = input.toUpperCase().charAt(0);
+		startOfMove.setColumn( (int) temp - ChessBoardPrinter.ASCII_DISPLACEMENT_FOR_ROW_LETTERS);
+		
 		System.out.print("Enter the row number of your piece's destination square: ");
-		endOfMove.setRow(keyboard.nextInt());
-		System.out.print("Enter the column: ");
-		endOfMove.setColumn(keyboard.nextInt());
+		endOfMove.setRow(keyboard.nextInt() - 1);
+		
+		System.out.print("Enter the ending column letter: ");
+		keyboard.nextLine(); //Remove '\n' from buffer.
+		input = keyboard.nextLine();
+		temp = input.toUpperCase().charAt(0);
+		endOfMove.setColumn( (int) temp - ChessBoardPrinter.ASCII_DISPLACEMENT_FOR_ROW_LETTERS);
 	}
 
 	/**
@@ -754,18 +764,18 @@ public class PlayableChessBoard
 //					System.out.println();
 //				}	
 		
-//		System.out.println(board.intermediateSquareIsBlocked(new Position(7,7), new Position(0,0) ) );
+		System.out.println(board.intermediateSquareIsBlocked(new Position(7,7), new Position(7,0) ) );
 //		board.executeMove(new Position(1,4), new Position(3,4));
 //		System.out.println(board.moveIsBlocked(new Position(7,1), new Position(5,2) ) );
 //		System.out.println(board.isValidMove(new Position(6,1), new Position(5,0), board.pieces) );
 		
-		System.out.println(board.wouldBeInCheck(new Position(1,4), new Position(3,4)));
-		board.executeMove(new Position(1,4), new Position(3,4));
-		System.out.println(board.wouldBeInCheck(new Position(6,6), new Position(4,6)));
-		board.executeMove(new Position(6,6), new Position(4,6));
-		System.out.println(board.wouldBeInCheck(new Position(0,3), new Position(4,7)));
-		board.executeMove(new Position(0,3), new Position(4,7));
-		System.out.println(board.wouldBeInCheck(new Position(6,5), new Position(5,5)));
-		board.executeMove(new Position(6,5), new Position(5,5));
+//		System.out.println(board.wouldBeInCheck(new Position(1,4), new Position(3,4)));
+//		board.executeMove(new Position(1,4), new Position(3,4));
+//		System.out.println(board.wouldBeInCheck(new Position(6,6), new Position(4,6)));
+//		board.executeMove(new Position(6,6), new Position(4,6));
+//		System.out.println(board.wouldBeInCheck(new Position(0,3), new Position(4,7)));
+//		board.executeMove(new Position(0,3), new Position(4,7));
+//		System.out.println(board.wouldBeInCheck(new Position(6,5), new Position(5,5)));
+//		board.executeMove(new Position(6,5), new Position(5,5));
 	}
 }
