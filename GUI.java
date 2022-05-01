@@ -19,6 +19,39 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class GUI {
+	private static int switcheroo(int yconvert) {
+		int yp = 0;
+		switch(yconvert) {
+		case 0:
+			yp = 7;
+			break;
+		case 1:
+			yp = 6;
+			break;
+		case 2:
+			yp = 5;
+			break;
+		case 3:
+			yp = 4;
+			break;
+		case 4:
+			yp = 3;
+			break;
+		case 5:
+			yp = 2;
+			break;
+		case 6:
+			yp = 1;
+			break;
+		case 7:
+			yp = 0;
+			break;
+		default:
+			break;
+		}
+		 
+		return yp;
+	}
 	public static void display()  {
 		BufferedImage all= null;
 		try{
@@ -32,7 +65,7 @@ public class GUI {
         ind++;
         }}    
         MoveableGamePiece[][] array = PlayableChessBoard.getDeepCopyOfPieces();
-    //    System.out.println(array[1][1]);
+       System.out.println(array[0][0]);
 	JFrame frame = new JFrame(); // Just startup code
     frame.setBounds(10, 10, 512, 512);  // sets the size of the board.
     frame.setUndecorated(true);
@@ -76,10 +109,10 @@ public class GUI {
         			if(array[row][col].getClass().getSimpleName().equals("Pawn")){
         			ind = 5;
         			}
-        			if((array[row][col].getColor() == chess.Color.WHITE)) {
+        			if(!(array[row][col].getColor() == chess.Color.WHITE)) {
         				ind+=6;
         			}
-        		g.drawImage(imgs[ind],col*64,row*64,this);
+        		g.drawImage(imgs[ind],col*64,switcheroo(row)*64,this);
         		}
         		
 
