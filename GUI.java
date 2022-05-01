@@ -52,6 +52,12 @@ public class GUI {
 		 
 		return yp;
 	}
+	/* This method converts the Y coordinates and reserves it because JavaSwing 0,0 starts 
+	 * at the top left instead of the bottom right causing problems in the way I choose to draw the pieces 
+	 * @param yconvert The row to be switched
+	 * @return The Y coordinate that is switched to be suited to match the console
+	 */
+	
 	public static void display()  {
 		BufferedImage all= null;
 		try{
@@ -64,8 +70,9 @@ public class GUI {
             imgs[ind]=all.getSubimage(x, y, 200, 200).getScaledInstance(64, 64, BufferedImage.SCALE_SMOOTH);
         ind++;
         }}    
+        
         MoveableGamePiece[][] array = PlayableChessBoard.getDeepCopyOfPieces();
-       System.out.println(array[0][0]);
+  //     System.out.println(array[0][0]);
 	JFrame frame = new JFrame(); // Just startup code
     frame.setBounds(10, 10, 512, 512);  // sets the size of the board.
     frame.setUndecorated(true);
@@ -124,18 +131,14 @@ frame.setVisible(true);
 }}
 
 /*
- *      MoveableGamePiece[][] array = PlayableChessBoard.getDeepCopyOfPieces();
-        System.out.println(array[1][1]);
-        //        for(int row = 0; row < 8; row++){
-//        	for (int col = 0; col < 8; col++) {
-//        		ind = 5;
-//        	if(array[row][col].getClass().getSimpleName().equals("Pawn")){
-//        		ind = 5;
-//        	}
-//        	g.drawImage(imgs[ind],5*54,5*64,this);
-//}};
-        *
-        *
-        *
-        *
-        */
+ * This is a method to display the GUI  
+ * @ Lines 62-72 This is used to get the image of the chess pieces I create subimages for all pieces
+ * @ Line  74 Used to get Data from the console 
+ * @ Lines 75-79 Startup code for GUI
+ * @ Lines 80-94 This draws the checkerboard for the Chess game
+ * @ Lines 96-127 This draws the image on the board, it is inside a nested loop to get data for every piece
+ * is not null then assigns the piece a subimage depending on what piece it is, in like 122 I draw that piece in
+ * its position by mutipling by 64 let the computer know where to draw, I have to use the switcheroo method in line 122
+ * to counteract 0,0 being in the top left instead of the bottom right.
+ * @ LLines 128-131 Makes the GUI visible
+ * */
