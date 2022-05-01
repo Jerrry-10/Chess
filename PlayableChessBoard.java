@@ -537,7 +537,7 @@ public class PlayableChessBoard
 		keyboard.nextLine(); //Remove '\n' from buffer.
 		String input = keyboard.nextLine();
 		char temp = input.toUpperCase().charAt(0);
-		startOfMove.setColumn( (int) temp - ChessBoardPrinter.ASCII_DISPLACEMENT_FOR_ROW_LETTERS);
+		startOfMove.setColumn( (int) temp - ChessBoardPrinter.ASCII_DISPLACEMENT_FOR_ROW_LETTERS - 1);
 		
 		System.out.print("Enter the row number of your piece's destination square: ");
 		endOfMove.setRow(keyboard.nextInt() - 1);
@@ -546,7 +546,7 @@ public class PlayableChessBoard
 		keyboard.nextLine(); //Remove '\n' from buffer.
 		input = keyboard.nextLine();
 		temp = input.toUpperCase().charAt(0);
-		endOfMove.setColumn( (int) temp - ChessBoardPrinter.ASCII_DISPLACEMENT_FOR_ROW_LETTERS);
+		endOfMove.setColumn( (int) temp - ChessBoardPrinter.ASCII_DISPLACEMENT_FOR_ROW_LETTERS - 1);
 	}
 
 	/**
