@@ -32,7 +32,7 @@ public class GUI {
         ind++;
         }}    
         MoveableGamePiece[][] array = PlayableChessBoard.getDeepCopyOfPieces();
-        System.out.println(array[1][1]);
+    //    System.out.println(array[1][1]);
 	JFrame frame = new JFrame(); // Just startup code
     frame.setBounds(10, 10, 512, 512);  // sets the size of the board.
     frame.setUndecorated(true);
@@ -57,7 +57,7 @@ public class GUI {
         	for (int col = 0; col < 8; col++) {
         		int ind = 0;
         		//System.out.println(array[row][col].getClass().getSimpleName().equals("Pawn"));
-        		if (row == 0|| row == 1 || row == 6 || row == 7) {
+        		if (array[row][col] != null) {
         			if(array[row][col].getClass().getSimpleName().equals("King")){
             			ind = 0;
             		}

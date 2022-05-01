@@ -88,6 +88,7 @@ public class PlayableChessBoard
 			
 			executeMove(startOfMove, endOfMove);
 			
+			GUI.display();
 		}while(!isCheckmate());
 		
 		JOptionPane.showMessageDialog(null, "CHECKMATE! " + player + "WINS!");
