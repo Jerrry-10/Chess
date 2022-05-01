@@ -163,7 +163,7 @@ public class ChessBoardPrinter {
 	
 	// Only Public Method Used Directly By main() 
 	static public void display() {
-		//displayHeading(); 
+		displayHeading(); 
 		displayStartingBoard(); 
 	
 	}
