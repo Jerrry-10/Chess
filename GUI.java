@@ -1,5 +1,9 @@
 package chess;
-
+/**
+ * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
+ * @date April 8 - May 3, 2022
+ * Class to display GUI
+ */
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -39,4 +43,5 @@ public class GUI {
 frame.add(pn);
 frame.setDefaultCloseOperation(3);
 frame.setVisible(true);
+//PlayableChessBoard.getDeepCopyOfPieces();
 }}
