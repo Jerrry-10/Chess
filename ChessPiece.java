@@ -25,7 +25,7 @@ public abstract class ChessPiece implements MoveableGamePiece
 	}
 	
 	/**
-	 * @precondition The chesspiece is NOT attempting to castle, capture en passant, or violate
+	 * Precondition: The chesspiece is NOT attempting to castle, capture en passant, or violate
 	 * the rules of "check."
 	 */
 	public abstract boolean moveIsValid(Position start, Position end, boolean moveIsACapture);

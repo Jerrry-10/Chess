@@ -56,7 +56,7 @@ public class ChessBoardPrinter {
 	private static final int COLUMNS = ROWS;
 	
 	//The first row is row A, which is 65 in ASCII. Second row is row B = 66.
-	public static final int ASCII_DISPLACEMENT_FOR_ROW_LETTERS = 64;
+	public static final int ASCII_DISPLACEMENT_FOR_COLUMN_LETTERS = 64;
 	
 	private static final String HEADING = 
 			"-----------------------------------------\n"
@@ -79,7 +79,7 @@ public class ChessBoardPrinter {
 		 char columnLetter;
 		
 		for(int row = ROWS ; row >= 1  ; --row ) {
-			columnLetter = (char) (row + ASCII_DISPLACEMENT_FOR_ROW_LETTERS);
+			columnLetter = (char) (row + ASCII_DISPLACEMENT_FOR_COLUMN_LETTERS);
 			System.out.printf("%-5d", row);
 
 			/**
@@ -155,7 +155,7 @@ public class ChessBoardPrinter {
 		
 		for (int column = 1; column <= COLUMNS; column++)
 		{
-			System.out.printf("%7C", column + ASCII_DISPLACEMENT_FOR_ROW_LETTERS);
+			System.out.printf("%7C", column + ASCII_DISPLACEMENT_FOR_COLUMN_LETTERS);
 		}
 		
 	}//End displayStartingBoard method.
@@ -168,6 +168,10 @@ public class ChessBoardPrinter {
 	
 	}
 
+	/**
+	 * Method to print a custom 8x8 array of chesspieces to the console.
+	 * @param pieces the array of chess pieces to be printed.
+	 */
 	public static void displayCustomBoard(MoveableGamePiece[][] pieces)
 	{
 		char chesspiece;
@@ -224,14 +228,14 @@ public class ChessBoardPrinter {
 		
 		for(int i = 1; i <= ROWS; i++)
 		{
-			System.out.printf("%7C", i+ASCII_DISPLACEMENT_FOR_ROW_LETTERS);
+			System.out.printf("%7C", i+ASCII_DISPLACEMENT_FOR_COLUMN_LETTERS);
 		}
 		System.out.println('\n');
 		
 	}
 
 	/**
-	 * @param args
+	 * @param args None.
 	 */
 	public static void main(String[] args) {
 		

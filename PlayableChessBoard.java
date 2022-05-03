@@ -119,8 +119,8 @@ public class PlayableChessBoard
 	/**
 	 * Method to terminate program with error message if user confuses row numbers with column letters 
 	 * while entering input.
-	 * @post Prints "Don't get your letters and numbers mixed up next time!\nGoodbye." Terminates program.
-	 *  */
+	 * Prints "Don't get your letters and numbers mixed up next time!\nGoodbye."
+	 */
 	private void printMismatchError() 
 	{
 		JOptionPane.showMessageDialog(null, "Don't get your letters and numbers mixed up next time!\nGoodbye.");
@@ -154,7 +154,7 @@ public class PlayableChessBoard
 	
 	/**
 	 * Method to print the pieces to the console. Useful for testing other methods.
-	 * @post The elements of the array "pieces" have been interpreted as Unicode characters
+	 * The elements of the array "pieces" gets interpreted as Unicode characters
 	 * and printed to the console in a chessboard pattern.
 	 */
 	//Tested
@@ -168,6 +168,52 @@ public class PlayableChessBoard
 	public String toString() {
 		return "PlayableChessBoard [player=" + player + ", startOfMove=" + startOfMove + ", endOfMove=" + endOfMove
 				+ ", whiteKingsSquare=" + whiteKingsSquare + ", blackKingsSquare=" + blackKingsSquare + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((blackKingsSquare == null) ? 0 : blackKingsSquare.hashCode());
+		result = prime * result + ((endOfMove == null) ? 0 : endOfMove.hashCode());
+		result = prime * result + ((player == null) ? 0 : player.hashCode());
+		result = prime * result + ((startOfMove == null) ? 0 : startOfMove.hashCode());
+		result = prime * result + ((whiteKingsSquare == null) ? 0 : whiteKingsSquare.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PlayableChessBoard other = (PlayableChessBoard) obj;
+		if (blackKingsSquare == null) {
+			if (other.blackKingsSquare != null)
+				return false;
+		} else if (!blackKingsSquare.equals(other.blackKingsSquare))
+			return false;
+		if (endOfMove == null) {
+			if (other.endOfMove != null)
+				return false;
+		} else if (!endOfMove.equals(other.endOfMove))
+			return false;
+		if (player != other.player)
+			return false;
+		if (startOfMove == null) {
+			if (other.startOfMove != null)
+				return false;
+		} else if (!startOfMove.equals(other.startOfMove))
+			return false;
+		if (whiteKingsSquare == null) {
+			if (other.whiteKingsSquare != null)
+				return false;
+		} else if (!whiteKingsSquare.equals(other.whiteKingsSquare))
+			return false;
+		return true;
 	}
 
 	/**
@@ -258,7 +304,6 @@ public class PlayableChessBoard
 	 * @param end The destination square.
 	 * @return True if another piece is blocking the move. False otherwise.
 	 */
-	//Tested.
 	private boolean moveIsBlocked(Position startingSquare, Position destination)
 	{
 		//FRIENDLY piece already on destination square.
@@ -295,10 +340,11 @@ public class PlayableChessBoard
 	 * Method to determine whether a proposed move for a pawn, bishop, rook, or queen moving more than 
 	 * one square is blocked by a piece of either color on an intermediate square. Does NOT test
 	 * whether destination square is blocked.
+	 * Precondition: The move is horizontal (columns change but rows do not), vertical (rows change but columns
+	 * do not), or properly diagonal (rows and columns change by the same amount).
 	 * @param startingSquare The square (array indices) where the move begins.
 	 * @param destination The destination square.
-	 * @precondition The move is horizontal (columns change but rows do not), vertical (rows change but columns
-	 * do not), or properly diagonal (rows and columns change by the same amount).
+	 * 
 	 * @return True if the move is blocked in that manner; false otherwise.
 	 */
 	//Tested successfully.
@@ -451,12 +497,13 @@ public class PlayableChessBoard
 
 	/**
 	 * Method to execute a chess move. Does NOT check whether the move is legal.
+	 * Postcondition: The destination square in the array "pieces" now holds a reference to the piece
+	 * that was moved. Any piece previously referenced by the destination square has therefore been dereferenced, 
+	 * thus the captured piece is no longer "on the board." The starting square now references null (an empty square).
+	 * If a king has been moved, then whiteKingsSquare or blackKingsSquare has been updated to the destination square.
 	 * @param startingSquare The square (array indices) where the move begins.
 	 * @param destination The position of the destination square.
-	 * @post The destination square in the array "pieces" now holds a reference to the piece
-	 *  that was moved. Any piece previously referenced by the destination square has therefore been dereferenced, 
-	 *  thus the captured piece is no longer "on the board." The starting square now references null (an empty square).
-	 *  If a king has been moved, then whiteKingsSquare or blackKingsSquare has been updated to the destination square.
+	 * 
 	 */
 	//Tested.
 	private void executeMove(Position startingSquare, Position destination)
@@ -555,7 +602,7 @@ public class PlayableChessBoard
 
 	/**
 	 * Method to get the input from the user/GUI.
-	 * @post startOfMove and endOfMove hold the coordinates of player's intended move.
+	 * Postcondition: startOfMove and endOfMove hold the coordinates of player's intended move.
 	 */
 	public void getNextMove()
 	{
@@ -568,7 +615,7 @@ public class PlayableChessBoard
 		keyboard.nextLine(); //Remove '\n' from buffer.
 		String input = keyboard.nextLine();
 		char temp = input.toUpperCase().charAt(0);
-		startOfMove.setColumn( (int) temp - ChessBoardPrinter.ASCII_DISPLACEMENT_FOR_ROW_LETTERS - 1);
+		startOfMove.setColumn( (int) temp - ChessBoardPrinter.ASCII_DISPLACEMENT_FOR_COLUMN_LETTERS - 1);
 		
 		System.out.print("Enter the row number of your piece's destination square: ");
 		endOfMove.setRow(keyboard.nextInt() - 1);
@@ -577,7 +624,7 @@ public class PlayableChessBoard
 		keyboard.nextLine(); //Remove '\n' from buffer.
 		input = keyboard.nextLine();
 		temp = input.toUpperCase().charAt(0);
-		endOfMove.setColumn( (int) temp - ChessBoardPrinter.ASCII_DISPLACEMENT_FOR_ROW_LETTERS - 1);
+		endOfMove.setColumn( (int) temp - ChessBoardPrinter.ASCII_DISPLACEMENT_FOR_COLUMN_LETTERS - 1);
 	}
 
 	/**
@@ -721,7 +768,7 @@ public class PlayableChessBoard
 	/**
 	 * This main is for testing individual methods. Our program's real launch point is 
 	 * ProtoChessLauncher.main();
-	 * @param args
+	 * @param args None.
 	 */
 	public static void main(String[] args) 
 	{
@@ -795,7 +842,7 @@ public class PlayableChessBoard
 //					System.out.println();
 //				}	
 		
-		System.out.println(board.intermediateSquareIsBlocked(new Position(7,7), new Position(7,0) ) );
+//		System.out.println(board.intermediateSquareIsBlocked(new Position(7,7), new Position(7,0) ) );
 //		board.executeMove(new Position(1,4), new Position(3,4));
 //		System.out.println(board.moveIsBlocked(new Position(7,1), new Position(5,2) ) );
 //		System.out.println(board.isValidMove(new Position(6,1), new Position(5,0), board.pieces) );

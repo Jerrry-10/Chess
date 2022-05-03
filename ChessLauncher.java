@@ -9,6 +9,10 @@ package chess;
 public class ChessLauncher 
 {
 
+	/**
+	 * Method to launch the chess game.
+	 * @param args None.
+	 */
 	public static void main(String[] args) 
 	{
 		PlayableChessBoard board = new PlayableChessBoard();
