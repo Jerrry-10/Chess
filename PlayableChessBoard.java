@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.InputMismatchException;
+
 /**
  * @author Kevin Reid, Jerry Aviles, & Eric Zheng.
  * @date April 8 - May 3, 2022
@@ -74,7 +76,14 @@ public class PlayableChessBoard
 			//If you want to move this into the GUI files, we can talk about that.
 			JOptionPane.showMessageDialog(null, player + "'s turn.");
 			
+			try 
+			{
 			getNextMove();
+			}
+			catch(InputMismatchException e)
+			{
+				printMismatchError();
+			}
 			
 			//Loop to check for an invalid Move and prompt user to try again.
 			while( (!isValidMove(startOfMove, endOfMove, pieces) ) 
@@ -83,11 +92,21 @@ public class PlayableChessBoard
 			{
 				JOptionPane.showMessageDialog(null, "Illegal Move. Please try again.");
 			//Be sure to send copy of result back to GUI.
+				
+				try 
+				{
 				getNextMove();
+				}
+				catch(InputMismatchException e)
+				{
+					printMismatchError();
+				}
+				
 			}
 			
 			executeMove(startOfMove, endOfMove);
 			
+			GUI.display();
 		}while(!isCheckmate());
 		
 		JOptionPane.showMessageDialog(null, "CHECKMATE! " + player + "WINS!");
@@ -95,6 +114,18 @@ public class PlayableChessBoard
 		keyboard.close();
 		System.exit(0);
 
+	}
+
+	/**
+	 * Method to terminate program with error message if user confuses row numbers with column letters 
+	 * while entering input.
+	 * @post Prints "Don't get your letters and numbers mixed up next time!\nGoodbye." Terminates program.
+	 *  */
+	private void printMismatchError() 
+	{
+		JOptionPane.showMessageDialog(null, "Don't get your letters and numbers mixed up next time!\nGoodbye.");
+		System.exit(6);
+		
 	}
 
 	/**
