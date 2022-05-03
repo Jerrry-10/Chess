@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-/** This method converts the Y coordinates and reserves it because JavaSwing 0,0 starts 
+/** This method converts the Y coordinates and reverses it because JavaSwing 0,0 starts 
  * at the top left instead of the bottom right causing problems in the way I choose to draw the pieces 
  * @param yconvert The row to be switched
  * @return The Y coordinate that is switched to be suited to match the console
@@ -70,6 +70,7 @@ public class GUI {
 	 * to counteract 0,0 being in the top left instead of the bottom right.
 	 * @ LLines 128-131 Makes the GUI visible
 	 */
+
 	public static void display()  {
 		BufferedImage all= null;
 		try{
@@ -141,3 +142,4 @@ frame.add(pn);
 frame.setDefaultCloseOperation(3);
 frame.setVisible(true);
 }}
+
