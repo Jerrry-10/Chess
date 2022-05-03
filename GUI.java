@@ -18,12 +18,14 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-/** This method converts the Y coordinates and reverses it because JavaSwing 0,0 starts 
- * at the top left instead of the bottom right causing problems in the way I choose to draw the pieces 
- * @param yconvert The row to be switched
- * @return The Y coordinate that is switched to be suited to match the console
- */
+
 public class GUI {
+	
+	/** This method converts the Y coordinates and reserves it because JavaSwing 0,0 starts 
+	 * at the top left instead of the bottom right causing problems in the way I choose to draw the pieces 
+	 * @param yconvert The row to be switched
+	 * @return The Y coordinate that is switched to be suited to match the console
+	 */
 	private static int switcheroo(int yconvert) {
 		int yp = 0;
 		switch(yconvert) {
@@ -60,21 +62,20 @@ public class GUI {
 	
 	/**
 	 * This is a method to display the GUI  
-	 * @ Lines 62-72 This is used to get the image of the chess pieces I create subimages for all pieces
-	 * @ Line  74 Used to get Data from the console 
-	 * @ Lines 75-79 Startup code for GUI
-	 * @ Lines 80-94 This draws the checkerboard for the Chess game
-	 * @ Lines 96-127 This draws the image on the board, it is inside a nested loop to get data for every piece
+	 * @Lines 62-72 This is used to get the image of the chess pieces I create subimages for all pieces
+	 * @Line  74 Used to get Data from the console 
+	 * @Lines 75-79 Startup code for GUI
+	 * @Lines 80-94 This draws the checkerboard for the Chess game
+	 * @Lines 96-127 This draws the image on the board, it is inside a nested loop to get data for every piece
 	 * is not null then assigns the piece a subimage depending on what piece it is, in like 122 I draw that piece in
 	 * its position by mutipling by 64 let the computer know where to draw, I have to use the switcheroo method in line 122
 	 * to counteract 0,0 being in the top left instead of the bottom right.
-	 * @ LLines 128-131 Makes the GUI visible
+	 * @Lines 128-131 Makes the GUI visible
 	 */
-
 	public static void display()  {
 		BufferedImage all= null;
 		try{
-			all = ImageIO.read(new File(""C:\\Users\\Jerry\\eclipse-workspace\\CSC330\\src\\chess\\chess.png""));
+			all = ImageIO.read(new File("C:\\Users\\Kevin\\Desktop\\MyWorkspace\\CSC 330 N\\src\\chess\\chess.png"));
 		} catch(IOException e) {}
         Image imgs[]=new Image[12];
         int ind=0;
@@ -142,4 +143,3 @@ frame.add(pn);
 frame.setDefaultCloseOperation(3);
 frame.setVisible(true);
 }}
-

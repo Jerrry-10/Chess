@@ -29,6 +29,8 @@ public final class Pawn extends ChessPiece implements MoveableGamePiece
 	
 	/**
 	 * Overloaded helper method designed to be called by the inherited, overridden, public version.
+	 * @param start The position of the starting square on the board.
+	 * @param end	The position of the ending square on the board. 
 	 * @return True if the move takes the pawn one square forward. Also true if the move is the pawn's
 	 * FIRST move and takes the pawn two squares forward. False otherwise.
 	 */
@@ -66,10 +68,10 @@ public final class Pawn extends ChessPiece implements MoveableGamePiece
 
 	/**
 	 * Helper method to determine whether a capture move is valid.
+	 * Precondition: The caller has determined that there is a piece to be captured, either on 
+	 * the end square or by en passant.
 	 * @param start The starting square of the proposed capture move.
 	 * @param end   The ending square of the proposed move.
-	 * @precondition The caller has determined that there is a piece to be captured, either on 
-	 * the end square or by en passant.
 	 * @return True if the pawn can make the move, false otherwise.
 	 */
 	private boolean captureIsValid(Position start, Position end)
